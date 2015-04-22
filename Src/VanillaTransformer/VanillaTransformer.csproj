@@ -46,6 +46,7 @@
     <Compile Include="ITransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ReflectionHelper.cs" />
+    <Compile Include="Utility\ITextFileReader.cs" />
     <Compile Include="VanillaTransformerTask.cs" />
     <Compile Include="ValuesProviders\XmlConfigurationValuesProvider.cs" />
   </ItemGroup>
