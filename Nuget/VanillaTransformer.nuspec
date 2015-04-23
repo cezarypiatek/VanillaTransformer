@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>VanillaTransformer</id>
+    <version>$version$</version>
+    <authors>Cezary Piatek</authors>
+    <owners>Cezary Piatek</owners>
+    <licenseUrl>https://github.com/cezarypiatek/VanillaTransformer/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/cezarypiatek/VanillaTransformer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A simple text transformer</description>
+    <releaseNotes>A first release</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Configuration Transformation</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>
