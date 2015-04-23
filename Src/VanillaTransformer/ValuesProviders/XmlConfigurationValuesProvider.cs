@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using VanillaTransformer.Utility;
 
@@ -31,11 +31,20 @@ namespace VanillaTransformer.ValuesProviders
                 var doc = XDocument.Load(str);
                 if (doc.Root == null)
                 {
-                    throw new ApplicationException("Invalid configuration file structure");
+                    throw new InvalidFileStructure("There is no root element");
                 }
-                var result = doc.Root.Elements().ToDictionary(el => el.Name.LocalName, el => el.Value);
+                var result = doc.Root.Elements()
+                    .Where(x => x.NodeType == XmlNodeType.Element)
+                    .ToDictionary(el => el.Name.LocalName, GetInnerXmlAsText);
                 return result;
             }
+        }
+
+        private static string GetInnerXmlAsText(XElement el)
+        {
+            var reader = el.CreateReader();
+            reader.MoveToContent();
+            return reader.ReadInnerXml();
         }
 
         private class SimpleTextFileReader : ITextFileReader
