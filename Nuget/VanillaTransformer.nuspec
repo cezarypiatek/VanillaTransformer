@@ -8,11 +8,16 @@
     <licenseUrl>https://github.com/cezarypiatek/VanillaTransformer/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/cezarypiatek/VanillaTransformer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A simple text transformer</description>
-    <releaseNotes>A first release</releaseNotes>
+    <description>MsBuildTask to create transformations of text files</description>
+    <releaseNotes>Add a post-transformation validation</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>Configuration Transformation</tags>
     <dependencies>
-    </dependencies>
+    </dependencies>	
   </metadata>
+  <files>
+		<file src="..\Src\VanillaTransformer\bin\Release\*.dll" target="tools" />
+		<file src="..\Src\VanillaTransformer\bin\Release\*.pdb" target="tools" />
+		<file src="build\VanillaTransformer.targets" target="build" />
+	</files>
 </package>
