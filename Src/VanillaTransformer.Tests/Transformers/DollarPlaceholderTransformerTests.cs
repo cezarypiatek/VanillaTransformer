@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using VanillaTransformer.Transformers;
 
@@ -63,6 +64,23 @@ namespace VanillaTransformer.Tests.Transformers
             //ASSERT
             Assert.IsNotNullOrEmpty(result);
             Assert.AreEqual(@"<element attr=""XX"" >YY</element>", result);
+        }
+
+        [Test]
+        public void should_be_able_to_detect_missing_values_for_template()
+        {
+            //ARRANGE
+            var values = new Dictionary<string, string>
+            {
+                {"Val1","XX"}
+            };
+            const string pattern = @"<element attr=""${Val1}"" >${Val2}</element>";
+            var tansformer = new DollarPlaceholderTransformer();
+
+            //ACT & ASSERT
+            var exception = Assert.Throws<MissingValuesException>(() => tansformer.Transform(pattern, values));
+            Assert.AreEqual(1, exception.MissingValuesNames.Count);
+            Assert.AreEqual("Val2", exception.MissingValuesNames.First());
         }
     }
 }
