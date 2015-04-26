@@ -10,7 +10,7 @@ https://www.nuget.org/packages/VanillaTransformer/
 2. Create values files
 3. Add transformation within build target
 
-Currently VanillaTransformer works as **MsBuildTask**. You can install it using nuget or add it manually to your ***.csproj** file as follows:
+Currently VanillaTransformer works as **MsBuildTask**. You can install it using nuget or add it manually to your *.csproj file as follows:
 ```XML
 <UsingTask TaskName="VanillaTransformerTask" AssemblyFile="VanillaTransformer.dll" />
 ```
