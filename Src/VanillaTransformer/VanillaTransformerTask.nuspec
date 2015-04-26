@@ -16,8 +16,8 @@
     </dependencies>	
   </metadata>
   <files>
-		<file src="..\Src\VanillaTransformer\bin\Release\*.dll" target="tools" />
-		<file src="..\Src\VanillaTransformer\bin\Release\*.pdb" target="tools" />
-		<file src="build\VanillaTransformer.targets" target="build" />
+		<file src="bin\$configuration$\*.dll" target="tools" />
+		<file src="bin\$configuration$\*.pdb" target="tools" />
+		<file src="..\..\Nuget\build\VanillaTransformer.targets" target="build" />
 	</files>
 </package>
