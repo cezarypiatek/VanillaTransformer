@@ -19,5 +19,7 @@
 		<file src="bin\$configuration$\*.dll" target="tools" />
 		<file src="bin\$configuration$\*.pdb" target="tools" />
 		<file src="..\..\Nuget\build\VanillaTransformer.targets" target="build" />
+		<file src="..\..\Nuget\tools\init.ps1" target="tools" />
+		<file src="..\..\Nuget\tools\VanillaTransformerCommands.psm1" target="tools" />
 	</files>
 </package>
