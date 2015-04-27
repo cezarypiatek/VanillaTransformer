@@ -42,4 +42,9 @@ After that you can start adding transformation within given build target
 </root>
 ```
 
+You can also add transformation using powershell command provided with nuget package:
+```PowerShell
+Add-Transformation "Configs\NHibernate.pattern.config" "Configs\NHibernate.values.dev.config" "NHibernate.config"
+```
+
 
