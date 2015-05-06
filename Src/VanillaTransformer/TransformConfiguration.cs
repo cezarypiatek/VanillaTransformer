@@ -10,9 +10,9 @@ namespace VanillaTransformer
 {
     public class TransformConfiguration
     {
-        public string PatternFile { get; set; }
+        public string PatternFilePath { get; set; }
         public string ValuesSource { get; set; }
-        public string Output { get; set; }
+        public string OutputFilePath { get; set; }
     }
 
     public class TransformConfigurationReader
@@ -52,9 +52,9 @@ namespace VanillaTransformer
                             .Where(y => IsElementWithName(y, "transformation"))
                             .Select(y => new TransformConfiguration
                             {
-                                PatternFile = pattern.Value,
+                                PatternFilePath = pattern.Value,
                                 ValuesSource = y.Attribute("values").Value,
-                                Output = y.Attribute("output").Value
+                                OutputFilePath = y.Attribute("output").Value
                             }).ToList();
                         return transformations;
                     });

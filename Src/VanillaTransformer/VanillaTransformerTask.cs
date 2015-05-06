@@ -50,12 +50,12 @@ namespace VanillaTransformer
             {
                 foreach (var transformation in GetTransformations())
                 {
-                    var configurationPattern = File.ReadAllText(transformation.PatternFile);
+                    var configurationPattern = File.ReadAllText(transformation.PatternFilePath);
                     var valuesProvider = GetValuesProvider();
                     var configurationTransformer = GetTransformer();
                     var configurationValues = valuesProvider.GetValues(transformation.ValuesSource);
                     var transformedConfiguration = configurationTransformer.Transform(configurationPattern, configurationValues);
-                    File.WriteAllText(transformation.Output, transformedConfiguration);
+                    File.WriteAllText(transformation.OutputFilePath, transformedConfiguration);
                 }
 
                 return true;   
@@ -80,9 +80,9 @@ namespace VanillaTransformer
             {
                 new TransformConfiguration
                 {
-                    PatternFile = PatternFile,
+                    PatternFilePath = PatternFile,
                     ValuesSource = ValuesSource,
-                    Output = OutputPath
+                    OutputFilePath = OutputPath
                 }
             };
         }

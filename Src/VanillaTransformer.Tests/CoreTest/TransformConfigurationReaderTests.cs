@@ -27,9 +27,9 @@ namespace VanillaTransformer.Tests.CoreTest
             //ASSERT
             Assert.IsNotNull(result);
             CollectionAssert.IsNotEmpty(result);
-            Assert.AreEqual("aaa.pattern.xml",result[0].PatternFile);
+            Assert.AreEqual("aaa.pattern.xml",result[0].PatternFilePath);
             Assert.AreEqual("aaa.values.xml",result[0].ValuesSource);
-            Assert.AreEqual("output.xml",result[0].Output);
+            Assert.AreEqual("output.xml",result[0].OutputFilePath);
         }
 
         [Test]
