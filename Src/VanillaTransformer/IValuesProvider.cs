@@ -4,6 +4,6 @@ namespace VanillaTransformer
 {
     public interface IValuesProvider
     {
-        IDictionary<string, string> GetValues(string source);
+        IDictionary<string, string> GetValues();
     }
 }

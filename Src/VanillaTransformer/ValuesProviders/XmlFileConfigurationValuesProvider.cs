@@ -6,8 +6,15 @@ using VanillaTransformer.Utility;
 
 namespace VanillaTransformer.ValuesProviders
 {
-    public class XmlConfigurationValuesProvider : IValuesProvider
+    public class XmlFileConfigurationValuesProvider : IValuesProvider
     {
+        private string SourceFilePath { get; set; }
+
+        public XmlFileConfigurationValuesProvider(string sourceFilePath)
+        {
+            SourceFilePath = sourceFilePath;
+        }
+
         private ITextFileReader fileReader;
 
         public ITextFileReader FileReader
@@ -23,9 +30,9 @@ namespace VanillaTransformer.ValuesProviders
             set { fileReader = value; }
         }
 
-        public IDictionary<string, string> GetValues(string source)
+        public IDictionary<string, string> GetValues()
         {
-            using (var str = FileReader.ReadFile(source))
+            using (var str = FileReader.ReadFile(SourceFilePath))
             {
                 var doc = XDocument.Load(str);
                 if (doc.Root == null)
@@ -34,17 +41,9 @@ namespace VanillaTransformer.ValuesProviders
                 }
                 var result = doc.Root.Elements()
                     .Where(x => x.NodeType == XmlNodeType.Element)
-                    .ToDictionary(el => el.Name.LocalName, GetInnerXmlAsText);
+                    .ToDictionary(el => el.Name.LocalName, el => el.GetInnerXmlAsText());
                 return result;
             }
         }
-
-        private static string GetInnerXmlAsText(XElement el)
-        {
-            var reader = el.CreateReader();
-            reader.MoveToContent();
-            return reader.ReadInnerXml();
-        }
-        
     }
 }

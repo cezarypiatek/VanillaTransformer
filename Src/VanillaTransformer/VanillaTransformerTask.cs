@@ -51,9 +51,8 @@ namespace VanillaTransformer
                 foreach (var transformation in GetTransformations())
                 {
                     var configurationPattern = File.ReadAllText(transformation.PatternFilePath);
-                    var valuesProvider = GetValuesProvider();
                     var configurationTransformer = GetTransformer();
-                    var configurationValues = valuesProvider.GetValues(transformation.ValuesSource);
+                    var configurationValues = transformation.ValuesProvider.GetValues();
                     var transformedConfiguration = configurationTransformer.Transform(configurationPattern, configurationValues);
                     File.WriteAllText(transformation.OutputFilePath, transformedConfiguration);
                 }
@@ -81,8 +80,8 @@ namespace VanillaTransformer
                 new TransformConfiguration
                 {
                     PatternFilePath = PatternFile,
-                    ValuesSource = ValuesSource,
-                    OutputFilePath = OutputPath
+                    OutputFilePath = OutputPath,
+                    ValuesProvider = GetValuesProvider()
                 }
             };
         }
@@ -98,7 +97,7 @@ namespace VanillaTransformer
             var providerName = string.IsNullOrWhiteSpace(ValuesProviderName)
                 ? GetDefaultValuesProviderName()
                 : ValuesProviderName;
-            return ReflectionHelper.GetInstanceOf<IValuesProvider>(providerName);
+            return ReflectionHelper.GetInstanceOf<IValuesProvider>(providerName,new []{ValuesSource});
         }
         
         private ITransformer GetTransformer()
@@ -111,7 +110,7 @@ namespace VanillaTransformer
 
         private static string GetDefaultValuesProviderName()
         {
-            return typeof(XmlConfigurationValuesProvider).Name;
+            return typeof(XmlFileConfigurationValuesProvider).Name;
         }
 
         private static string GetTransformerName()

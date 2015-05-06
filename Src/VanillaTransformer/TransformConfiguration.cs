@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using VanillaTransformer.Utility;
 using VanillaTransformer.ValuesProviders;
@@ -11,12 +9,22 @@ namespace VanillaTransformer
     public class TransformConfiguration
     {
         public string PatternFilePath { get; set; }
-        public string ValuesSource { get; set; }
         public string OutputFilePath { get; set; }
+        public IValuesProvider ValuesProvider { get; set; }
     }
 
     public class TransformConfigurationReader
     {
+        private const string ValuesSourceElementName = "values";
+
+        private const string TransformationGroupElementName = "transformationGroup";
+
+        private const string TransformationElementName = "transformation";
+
+        private const string PatternSourceElementName = "pattern";
+
+        private const string OutputPathElementName = "output";
+
 
         private ITextFileReader fileReader;
 
@@ -44,17 +52,17 @@ namespace VanillaTransformer
                     throw new InvalidFileStructure("There is no root element");
                 }
                 var result = doc.Root.Elements()
-                    .Where(x => IsElementWithName(x, "transformationGroup"))
+                    .Where(x => x.IsElementWithName(TransformationGroupElementName))
                     .Select(x =>
                     {
-                        var pattern = x.Attribute("pattern");
+                        var pattern = x.Attribute(PatternSourceElementName);
                         var transformations = x.Elements()
-                            .Where(y => IsElementWithName(y, "transformation"))
+                            .Where(y => y.IsElementWithName(TransformationElementName))
                             .Select(y => new TransformConfiguration
                             {
                                 PatternFilePath = pattern.Value,
-                                ValuesSource = y.Attribute("values").Value,
-                                OutputFilePath = y.Attribute("output").Value
+                                OutputFilePath = y.Attribute(OutputPathElementName).Value,
+                                ValuesProvider = CreateValuesProvider(y)
                             }).ToList();
                         return transformations;
                     });
@@ -62,9 +70,19 @@ namespace VanillaTransformer
             }
         }
 
-        private static bool IsElementWithName(XElement x, string name)
+        private static IValuesProvider CreateValuesProvider(XElement y)
         {
-            return x.NodeType == XmlNodeType.Element && string.Equals(x.Name.LocalName, name,StringComparison.InvariantCultureIgnoreCase);
+            if (y.Attribute(ValuesSourceElementName) != null)
+            {
+                return new XmlFileConfigurationValuesProvider(y.Attribute(ValuesSourceElementName).Value);
+            }
+
+            if (y.Element(ValuesSourceElementName) != null)
+            {
+                return new XmlInlineConfigurationValuesProvider(y.Element(ValuesSourceElementName));
+            }
+
+            throw new InvalidFileStructure("There is no values source defined for transformation");
         }
     }
 }

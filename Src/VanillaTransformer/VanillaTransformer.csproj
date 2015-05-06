@@ -51,8 +51,10 @@
     <Compile Include="Utility\ITextFileReader.cs" />
     <Compile Include="ValuesProviders\InvalidFileStructure.cs" />
     <Compile Include="Utility\SimpleTextFileReader.cs" />
+    <Compile Include="Utility\XElementExtensions.cs" />
+    <Compile Include="ValuesProviders\XmlInlineConfigurationValuesProvider.cs" />
     <Compile Include="VanillaTransformerTask.cs" />
-    <Compile Include="ValuesProviders\XmlConfigurationValuesProvider.cs" />
+    <Compile Include="ValuesProviders\XmlFileConfigurationValuesProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
