@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TransformConfiguration.cs" />
     <Compile Include="Transformers\DollarPlaceholderTransformer.cs" />
     <Compile Include="IValuesProvider.cs" />
     <Compile Include="ITransformer.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Utility\ReflectionHelper.cs" />
     <Compile Include="Utility\ITextFileReader.cs" />
     <Compile Include="ValuesProviders\InvalidFileStructure.cs" />
+    <Compile Include="Utility\SimpleTextFileReader.cs" />
     <Compile Include="VanillaTransformerTask.cs" />
     <Compile Include="ValuesProviders\XmlConfigurationValuesProvider.cs" />
   </ItemGroup>

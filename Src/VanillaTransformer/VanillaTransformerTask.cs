@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using VanillaTransformer.Transformers;
 using VanillaTransformer.Utility;
@@ -16,19 +16,16 @@ namespace VanillaTransformer
         /// <summary>
         /// Path to a file with configuration pattern
         /// </summary>
-        [Required]
         public string PatternFile { get; set; }
 
         /// <summary>
         /// Path to a output file
         /// </summary>
-        [Required]
         public string OutputPath { get; set; }
 
         /// <summary>
         /// Path to a file with values required by the pattern file
         /// </summary>
-        [Required]
         public string ValuesSource { get; set; }
 
         /// <summary>
@@ -41,23 +38,58 @@ namespace VanillaTransformer
         /// </summary>
         public string TransformerName { get; set; }
 
+
+        /// <summary>
+        /// Path to a file with transform configuration
+        /// </summary>
+        public string TransformConfiguration { get; set; }
+
         public override bool Execute()
         {
             try
             {
-                var configurationPattern = File.ReadAllText(PatternFile);
-                var valuesProvider = GetValuesProvider();
-                var configurationTransformer = GetTransformer();
-                var configurationValues = valuesProvider.GetValues(ValuesSource);
-                var transformedConfiguration = configurationTransformer.Transform(configurationPattern, configurationValues);
-                File.WriteAllText(OutputPath, transformedConfiguration);
-                return true;
+                foreach (var transformation in GetTransformations())
+                {
+                    var configurationPattern = File.ReadAllText(transformation.PatternFile);
+                    var valuesProvider = GetValuesProvider();
+                    var configurationTransformer = GetTransformer();
+                    var configurationValues = valuesProvider.GetValues(transformation.ValuesSource);
+                    var transformedConfiguration = configurationTransformer.Transform(configurationPattern, configurationValues);
+                    File.WriteAllText(transformation.Output, transformedConfiguration);
+                }
+
+                return true;   
             }
             catch (Exception e)
             {
                 Log.LogError(e.Message);
                 return false;
             }
+        }
+
+        private List<TransformConfiguration> GetTransformations()
+        {
+            if (IsTransformConfigurationFileSpecified())
+            {
+                var configurationReder = new TransformConfigurationReader();
+                return configurationReder.ReadFromFile(TransformConfiguration);
+
+            }
+            
+            return new List<TransformConfiguration>
+            {
+                new TransformConfiguration
+                {
+                    PatternFile = PatternFile,
+                    ValuesSource = ValuesSource,
+                    Output = OutputPath
+                }
+            };
+        }
+
+        private bool IsTransformConfigurationFileSpecified()
+        {
+            return string.IsNullOrWhiteSpace(TransformConfiguration) == false;
         }
 
 

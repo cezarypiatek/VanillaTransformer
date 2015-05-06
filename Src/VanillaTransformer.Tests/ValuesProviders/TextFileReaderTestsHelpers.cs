@@ -5,7 +5,7 @@ using VanillaTransformer.Utility;
 
 namespace VanillaTransformer.Tests.ValuesProviders
 {
-    public static class XmlValuesProviderTestsHelpers
+    public static class TextFileReaderTestsHelpers
     {
         public static ITextFileReader GetTextFileReaderMock(string filePath, string fileContent)
         {

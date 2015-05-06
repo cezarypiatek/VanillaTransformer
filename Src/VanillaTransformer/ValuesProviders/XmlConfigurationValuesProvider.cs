@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -46,13 +45,6 @@ namespace VanillaTransformer.ValuesProviders
             reader.MoveToContent();
             return reader.ReadInnerXml();
         }
-
-        private class SimpleTextFileReader : ITextFileReader
-        {
-            public Stream ReadFile(string path)
-            {
-                return File.OpenRead(path);
-            }
-        }
+        
     }
 }
