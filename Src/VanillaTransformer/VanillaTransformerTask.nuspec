@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/cezarypiatek/VanillaTransformer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>MsBuildTask to create transformations of text files</description>
-    <releaseNotes>Add a post-transformation validation</releaseNotes>
+    <releaseNotes>Added the ability to define transformation in separated xml file instead of inside csproj file</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>Configuration Transformation</tags>
     <dependencies>
