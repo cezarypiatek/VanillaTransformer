@@ -17,7 +17,7 @@ namespace VanillaTransformer.Utility
                 var typeNotFoundMessage = string.Format("Cannot find configuration values provider called '{0}'", typeName);
                 throw new ApplicationException(typeNotFoundMessage);
             }
-            var demandedTypeInstance = Activator.CreateInstance(valuesProviderType, true,constructorParameters) as TDemandedType;
+            var demandedTypeInstance = Activator.CreateInstance(valuesProviderType, constructorParameters) as TDemandedType;
             if (demandedTypeInstance == null)
             {
                 var invalidImplementationMessage = string.Format("The given type '{0}' should implement {1} interface",typeName, typeof(TDemandedType).Name);

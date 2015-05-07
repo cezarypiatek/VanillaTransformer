@@ -50,6 +50,7 @@
     <Compile Include="CoreTest\TransformConfigurationReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transformers\DollarPlaceholderTransformerTests.cs" />
+    <Compile Include="UtilityTest\ReflectionHelperTest.cs" />
     <Compile Include="ValuesProviders\XmlValuesProviderTests.cs" />
     <Compile Include="ValuesProviders\TextFileReaderTestsHelpers.cs" />
   </ItemGroup>
