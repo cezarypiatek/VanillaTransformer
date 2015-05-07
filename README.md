@@ -47,4 +47,50 @@ You can also add transformation using powershell command provided with nuget pac
 Add-Transformation "Configs\NHibernate.pattern.config" "Configs\NHibernate.values.dev.config" "NHibernate.config"
 ```
 
+##Transformation Configuration File
+Instead of adding each transformation by editing *.csproj file (what is very uncomfortable) you can create transformation configuration file with all transformations and add it once to project file. To register the configuration file add the following element into csproj file:
 
+```XML
+<Target Name="AfterBuild">
+	<VanillaTransformerTask TransformConfiguration="Configs\transformations.xml" />
+</Target>
+```
+
+or use PowerShell command
+
+```PowerShell
+Add-TransformationConfig "Configs\transformations.xml"
+```
+
+**Example transformation configuration file**
+```XML
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <transformationGroup pattern="Configs\NHibernate.pattern.config">
+    <transformation values="NHibernate.values.dev.config" output="NHibernate.config" />
+    <transformation values="NHibernate.values.stagging.config" output="Configs\Transformed\NHibernate.config" />
+  </transformationGroup>
+  <transformationGroup pattern="Configs\Web.pattern.config">
+    <transformation values="Web.values.dev.config" output="Web.config" />
+    <transformation values="Web.values.stagging.config" output="Configs\Transformed\Web.config" />
+  </transformationGroup>
+</root>
+```
+You can also define inline values for transformation instead of putting it in separated files.
+```XML
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <transformationGroup pattern="Configs\NHibernate.pattern.config">
+    <transformation output="NHibernate.config">
+    	<values>
+    		<ConnectionString>Data Source=localhost;Database=TestDB;Integrated Security=true;</ConnectionString>
+    	</values>
+    </transformation>
+    <transformation output="Configs\Transformed\NHibernate.config">
+    	<values>
+    		<ConnectionString>Data Source=localhost;Database=StaggingDB;Integrated Security=true;</ConnectionString>
+    	</values>
+    </transformation>
+  </transformationGroup>
+</root>
+```
