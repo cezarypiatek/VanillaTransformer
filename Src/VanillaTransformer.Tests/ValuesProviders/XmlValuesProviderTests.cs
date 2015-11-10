@@ -58,6 +58,34 @@ namespace VanillaTransformer.Tests.ValuesProviders
 
         }
 
+
+        [Test]
+        public void should_be_able_read_value_with_xml_content_and_preserve_whitespaces()
+        {
+             //ARRANGE
+            const string testFileName = "test.xml";
+            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName);
+            xmlValueProvider.FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName,
+@"<root>
+    <Var1>
+        <InsideXml>Sample</InsideXml>
+        <InsideXml>Sample2</InsideXml>
+    </Var1>
+</root>");
+            
+            //ACT
+            var result = xmlValueProvider.GetValues();
+
+            //ASSERT
+            var firstPair = result.First();
+            Assert.AreEqual(
+@"
+        <InsideXml>Sample</InsideXml>
+        <InsideXml>Sample2</InsideXml>
+    ", firstPair.Value);
+
+        }
+
         [Test]
         public void should_be_able_read_value_with_xml_attribute()
         {

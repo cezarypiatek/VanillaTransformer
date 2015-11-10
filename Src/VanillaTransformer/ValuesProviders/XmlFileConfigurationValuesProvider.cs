@@ -34,14 +34,21 @@ namespace VanillaTransformer.ValuesProviders
         {
             using (var str = FileReader.ReadFile(SourceFilePath))
             {
-                var doc = XDocument.Load(str);
+                var doc = XDocument.Load(str, LoadOptions.PreserveWhitespace);
                 if (doc.Root == null)
                 {
                     throw new InvalidFileStructure("There is no root element");
                 }
                 var result = doc.Root.Elements()
                     .Where(x => x.NodeType == XmlNodeType.Element)
-                    .ToDictionary(el => el.Name.LocalName, el => el.GetInnerXmlAsText());
+                    .ToDictionary(el => el.Name.LocalName, el =>
+                    {
+                        if (el.NodeType == XmlNodeType.Element)
+                        {
+                            return el.GetInnerXmlAsText().Replace("\n", "\r\n");
+                        }
+                        return el.Value;
+                    });
                 return result;
             }
         }
