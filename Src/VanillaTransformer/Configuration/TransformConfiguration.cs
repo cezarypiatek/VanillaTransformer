@@ -10,5 +10,18 @@ namespace VanillaTransformer.Configuration
         public string OutputFilePath { get; set; }
         public IValuesProvider ValuesProvider { get; set; }
         public List<IPostTransformation> PostTransformations { get; set; }
+
+        public string RunPostTransformations(string transformedText)
+        {
+            var result = transformedText;
+            if (PostTransformations != null)
+            {
+                foreach (var postTransformation in PostTransformations)
+                {
+                    result = postTransformation.Execute(result);
+                }
+            }
+            return result;
+        }
     }
 }

@@ -55,7 +55,8 @@ namespace VanillaTransformer
                     var configurationTransformer = GetTransformer();
                     var configurationValues = transformation.ValuesProvider.GetValues();
                     var transformedConfiguration = configurationTransformer.Transform(configurationPattern, configurationValues);
-                    File.WriteAllText(transformation.OutputFilePath, transformedConfiguration);
+                    var result = transformation.RunPostTransformations(transformedConfiguration);
+                    File.WriteAllText(transformation.OutputFilePath, result);
                 }
 
                 return true;   
