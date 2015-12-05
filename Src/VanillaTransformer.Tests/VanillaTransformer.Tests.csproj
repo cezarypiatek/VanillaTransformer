@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreTest\TransformConfigurationReaderTests.cs" />
+    <Compile Include="PostTransformations\ReFormatXMLTest.cs" />
+    <Compile Include="PostTransformations\StripXMLCommentTransformationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transformers\DollarPlaceholderTransformerTests.cs" />
     <Compile Include="UtilityTest\ReflectionHelperTest.cs" />

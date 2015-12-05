@@ -41,6 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPostTransformationsConfigurationOperation.cs" />
+    <Compile Include="PostTransformationsPool.cs" />
+    <Compile Include="PostTransformations\StripXMLCommentsTransformation.cs" />
+    <Compile Include="PostTransformations\IPostTransformation.cs" />
+    <Compile Include="PostTransformations\ReFormatXMLTransformation.cs" />
     <Compile Include="TransformConfiguration.cs" />
     <Compile Include="Transformers\DollarPlaceholderTransformer.cs" />
     <Compile Include="IValuesProvider.cs" />

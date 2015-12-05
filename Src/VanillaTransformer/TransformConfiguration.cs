@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using VanillaTransformer.PostTransformations;
 using VanillaTransformer.Utility;
 using VanillaTransformer.ValuesProviders;
 
@@ -11,6 +13,7 @@ namespace VanillaTransformer
         public string PatternFilePath { get; set; }
         public string OutputFilePath { get; set; }
         public IValuesProvider ValuesProvider { get; set; }
+        public List<IPostTransformation> PostTransformations { get; set; }
     }
 
     public class TransformConfigurationReader
@@ -25,6 +28,7 @@ namespace VanillaTransformer
 
         private const string OutputPathElementName = "output";
 
+        private const string PostTransformationElementName = "postTransformations";
 
         private ITextFileReader fileReader;
 
@@ -51,10 +55,13 @@ namespace VanillaTransformer
                 {
                     throw new InvalidFileStructure("There is no root element");
                 }
+
+                var rootPostTransformations = GetPostTranformation(doc.Root, new List<IPostTransformation>());
                 var result = doc.Root.Elements()
                     .Where(x => x.IsElementWithName(TransformationGroupElementName))
                     .Select(x =>
                     {
+                        var groupPostTransformations = GetPostTranformation(x, rootPostTransformations);
                         var pattern = x.Attribute(PatternSourceElementName);
                         var transformations = x.Elements()
                             .Where(y => y.IsElementWithName(TransformationElementName))
@@ -62,11 +69,45 @@ namespace VanillaTransformer
                             {
                                 PatternFilePath = pattern.Value,
                                 OutputFilePath = y.Attribute(OutputPathElementName).Value,
-                                ValuesProvider = CreateValuesProvider(y)
+                                ValuesProvider = CreateValuesProvider(y),
+                                PostTransformations = GetPostTranformation(y, groupPostTransformations)
                             }).ToList();
                         return transformations;
                     });
                 return result.SelectMany(x => x).ToList();
+            }
+        }
+
+        private List<IPostTransformation> GetPostTranformation(XElement node, List<IPostTransformation> inheritedPostTransformations)
+        {
+            var configuration = GetPostTransformationsConfiguration(node);
+            var result = inheritedPostTransformations.ToList();
+            foreach (var operation in configuration)
+            {
+                operation.Execute(result);
+            }
+            return result;
+        }
+
+        private List<IPostTransformationsConfigurationOperation> GetPostTransformationsConfiguration(XElement node)
+        {
+            try
+            {
+                var postTransformationsNode = node.Elements()
+                    .SingleOrDefault(x => x.IsElementWithName(PostTransformationElementName));
+
+                if (postTransformationsNode == null)
+                {
+                    return new List<IPostTransformationsConfigurationOperation>();
+                }
+
+                return postTransformationsNode.Elements()
+                    .Select(PostTransformationsConfigurationOperationFactory.Create)
+                    .ToList();
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidFileStructure("Only one 'PostTransformations' element is allowed on given level");
             }
         }
 
