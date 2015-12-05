@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml;
 
 namespace VanillaTransformer.PostTransformations.XML
@@ -12,7 +13,7 @@ namespace VanillaTransformer.PostTransformations.XML
             {
                 Indent = true,
                 IndentChars = "    ",
-                NewLineChars = "\r\n",
+                NewLineChars = Environment.NewLine,
                 NewLineHandling = NewLineHandling.Replace,
             };
             var xDocument = new XmlDocument();
