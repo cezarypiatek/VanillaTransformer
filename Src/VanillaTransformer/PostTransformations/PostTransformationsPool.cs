@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VanillaTransformer.PostTransformations;
+using VanillaTransformer.PostTransformations.XML;
 
-namespace VanillaTransformer
+namespace VanillaTransformer.PostTransformations
 {
     public static class PostTransformationsPool
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Build.Utilities;
+using VanillaTransformer.Configuration;
 using VanillaTransformer.Transformers;
 using VanillaTransformer.Utility;
 using VanillaTransformer.ValuesProviders;

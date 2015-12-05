@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using VanillaTransformer.PostTransformations;
+using VanillaTransformer.PostTransformations.XML;
 
 namespace VanillaTransformer.Tests.PostTransformations
 {

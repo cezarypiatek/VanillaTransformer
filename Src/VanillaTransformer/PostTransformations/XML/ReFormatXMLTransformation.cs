@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
-using System.Xml.Linq;
 
-namespace VanillaTransformer.PostTransformations
+namespace VanillaTransformer.PostTransformations.XML
 {
     public class ReFormatXMLTransformation:IPostTransformation
     {

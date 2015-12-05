@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using VanillaTransformer.Configuration;
 using VanillaTransformer.Tests.ValuesProviders;
 
 namespace VanillaTransformer.Tests.CoreTest

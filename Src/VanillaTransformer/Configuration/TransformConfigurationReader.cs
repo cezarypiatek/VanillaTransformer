@@ -1,21 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using VanillaTransformer.Configuration.PostTransformations;
 using VanillaTransformer.PostTransformations;
 using VanillaTransformer.Utility;
 using VanillaTransformer.ValuesProviders;
 
-namespace VanillaTransformer
+namespace VanillaTransformer.Configuration
 {
-    public class TransformConfiguration
-    {
-        public string PatternFilePath { get; set; }
-        public string OutputFilePath { get; set; }
-        public IValuesProvider ValuesProvider { get; set; }
-        public List<IPostTransformation> PostTransformations { get; set; }
-    }
-
     public class TransformConfigurationReader
     {
         private const string ValuesSourceElementName = "values";
