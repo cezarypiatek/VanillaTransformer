@@ -19,7 +19,7 @@ After that you can start adding transformation within given build target
 <Target Name="AfterBuild">   
 	<VanillaTransformerTask PatternFile="Configs\NHibernate.pattern.config" ValuesSource="Configs\NHibernate.values.dev.config" OutputPath="NHibernate.config" />
     <VanillaTransformerTask PatternFile="Configs\NHibernate.pattern.config" ValuesSource="Configs\NHibernate.values.test.config" OutputPath="Configs\Transformed\NHibernate.Test.config" />
-	<VanillaTransformerTask PatternFile="Configs\NHibernate.pattern.config" ValuesSource="Configs\NHibernate.values.stagging.config" OutputPath="Configs\Transformed\NHibernate.Stagging.config" />
+	<VanillaTransformerTask PatternFile="Configs\NHibernate.pattern.config" ValuesSource="Configs\NHibernate.values.staging.config" OutputPath="Configs\Transformed\NHibernate.Staging.config" />
  </Target>
 ```
 **Example Pattern file**
@@ -68,11 +68,11 @@ Add-TransformationConfig "Configs\transformations.xml"
 <root>
   <transformationGroup pattern="Configs\NHibernate.pattern.config">
     <transformation values="NHibernate.values.dev.config" output="NHibernate.config" />
-    <transformation values="NHibernate.values.stagging.config" output="Configs\Transformed\NHibernate.config" />
+    <transformation values="NHibernate.values.staging.config" output="Configs\Transformed\NHibernate.config" />
   </transformationGroup>
   <transformationGroup pattern="Configs\Web.pattern.config">
     <transformation values="Web.values.dev.config" output="Web.config" />
-    <transformation values="Web.values.stagging.config" output="Configs\Transformed\Web.config" />
+    <transformation values="Web.values.staging.config" output="Configs\Transformed\Web.config" />
   </transformationGroup>
 </root>
 ```
@@ -88,9 +88,64 @@ You can also define inline values for transformation instead of putting it in se
     </transformation>
     <transformation output="Configs\Transformed\NHibernate.config">
     	<values>
-    		<ConnectionString>Data Source=localhost;Database=StaggingDB;Integrated Security=true;</ConnectionString>
+    		<ConnectionString>Data Source=localhost;Database=StagingDB;Integrated Security=true;</ConnectionString>
     	</values>
     </transformation>
   </transformationGroup>
 </root>
 ```
+##Post-Transformations
+VanillaTransformer supports post-transformations which are apllied to transformed configuration in the form of pipeline.
+You can add post-transformations on any level of VanillaTransformer configuration (root, transformationGroup or transformation level) in the following manner:
+
+```XML
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <postTransformations>
+    <add name="StripXMLComments" />
+    <add name="ReFormatXML" />
+  </postTransformations>
+  <transformationGroup pattern="Configs\NHibernate.pattern.config">
+    <transformation values="Configs\NHibernate.values.dev.config" output="NHibernate.config" />
+    <transformation values="Configs\NHibernate.values.prod.config" output="Configs\Transformed\NHibernate.prod.config" />
+  </transformationGroup>
+  <transformationGroup pattern="Configs\Web.pattern.config">
+    <transformation values="Configs\Web.values.dev.config" output="Web.config" />
+    <transformation values="Configs\Web.values.prod.config" output="Configs\Transformed\Web.prod.config" />
+  </transformationGroup>
+</root>
+```
+
+You can also modify post-transformations set defined on higher level using "add" , "remove", and "clear" tags as follows
+```XML
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <postTransformations>
+    <add name="StripXMLComments" />
+    <add name="ReFormatXML" />
+  </postTransformations>
+  <transformationGroup pattern="Configs\NHibernate.pattern.config">
+    <transformation values="Configs\NHibernate.values.dev.config" output="NHibernate.config">
+      <postTransformations>
+        <remove name="StripXMLComments" />
+      </postTransformations>
+    </transformation>
+    <transformation values="Configs\NHibernate.values.prod.config" output="Configs\Transformed\NHibernate.prod.config" />
+  </transformationGroup>
+  <transformationGroup pattern="Configs\Web.pattern.config">
+    <postTransformations>
+      <clear />
+    </postTransformations>
+    <transformation values="Configs\Web.values.dev.config" output="Web.config" >
+      <postTransformations>
+        <add name="ReFormatXML" />
+      </postTransformations>
+    </transformation>
+    <transformation values="Configs\Web.values.prod.config" output="Configs\Transformed\Web.prod.config" />
+  </transformationGroup>
+</root>
+```
+
+Currently available post-transformations:
+* StripXMLComments
+* ReFormatXML
