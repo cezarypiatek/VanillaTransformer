@@ -13,7 +13,7 @@ namespace VanillaTransformer.PostTransformations.XML
             {
                 Indent = true,
                 IndentChars = "    ",
-                NewLineChars = Environment.NewLine,
+                NewLineChars = "\r\n",
                 NewLineHandling = NewLineHandling.Replace,
             };
             var xDocument = new XmlDocument();

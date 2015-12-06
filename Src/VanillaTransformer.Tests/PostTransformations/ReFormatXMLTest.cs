@@ -18,11 +18,7 @@ namespace VanillaTransformer.Tests.PostTransformations
             var result = transformer.Execute(sampleXML);
 
             //ASSERT
-            const string expectedResult =
-@"<?xml version=""1.0"" encoding=""utf-8""?>
-<root>
-    <body>Test</body>
-</root>";
+            const string expectedResult = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<root>\r\n    <body>Test</body>\r\n</root>";
             Assert.AreEqual(expectedResult, result);
         }
     }
