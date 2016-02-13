@@ -9,6 +9,14 @@ function Add-Transformation($pattern, $values, $output){
 		$afterBuildTarget = $buildProject.Xml.AddTarget("AfterBuild")
 		Write-Host "Build target 'AfterBuild' has been created successfully."
 	}
+    
+    $existingTask = Get-VanillaTransformerTasks |? {($_.GetParameter("PatternFile") -eq $pattern) -and ($_.GetParameter("ValuesSource") -eq $values) -and ($_.GetParameter("OutputPath") -eq $output)}
+    if($existingTask)
+    {
+        Write-Host "Task with PatternFile '$pattern', ValuesSource '$values' and OutputPath '$output' already exists"
+        return
+    }
+
 	$task = $afterBuildTarget.AddTask("VanillaTransformerTask")
 	$task.SetParameter("PatternFile", $pattern)
 	$task.SetParameter("ValuesSource", $values)
@@ -27,7 +35,14 @@ function Add-TransformationConfig($configFilePath){
 		$afterBuildTarget = $buildProject.Xml.AddTarget("AfterBuild")
 		Write-Host "Build target 'AfterBuild' has been created successfully."
 	}
-	$task = $afterBuildTarget.AddTask("VanillaTransformerTask")
+	
+    $existingTask = Get-VanillaTransformerTasks |? {$_.GetParameter("TransformConfiguration") -eq $configFilePath}
+    if($existingTask)
+    {
+        Write-Host "Task with transformation config '$configFilePath' already exists"
+        return
+    }
+    $task = $afterBuildTarget.AddTask("VanillaTransformerTask")
 	$task.SetParameter("TransformConfiguration", $configFilePath)	
 	$buildProject.Save()
 	$project.Save()
