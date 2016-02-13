@@ -88,22 +88,22 @@ function Load-VanillaTransformerLib{
 function Invoke-Transformations
 {
     [CmdletBinding()]
-    param($configFilePath)
+    param($ConfigFilePath)
     Load-VanillaTransformerLib
     
     $oldPath = Get-Location
-    $projectPath = (Get-Project | Select -ExpandProperty FullName |Split-Path -Parent)      
-    [System.IO.Directory]::SetCurrentDirectory($projectPath)    
+    $projectPath = (Get-Project | Select -ExpandProperty FullName |Split-Path -Parent)
+    [System.IO.Directory]::SetCurrentDirectory($projectPath)
         
-    if(-not([System.String]::IsNullOrWhiteSpace($configFilePath)))
+    if(-not([System.String]::IsNullOrWhiteSpace($ConfigFilePath)))
     {
         $transformationTask = New-Object VanillaTransformer.VanillaTransformerTask
-        $transformationTask.TransformConfiguration = $configFilePath        
+        $transformationTask.TransformConfiguration = $ConfigFilePath
         Invoke-TransformationTask $transformationTask
     }else{
         Get-VanillaTransformerTasks |% {
             $transformationTask = New-Object VanillaTransformer.VanillaTransformerTask
-            $transformationTask.TransformConfiguration = $_.GetParameter("TransformConfiguration")               
+            $transformationTask.TransformConfiguration = $_.GetParameter("TransformConfiguration")
             $transformationTask.PatternFile = $_.GetParameter("PatternFile")
 	        $transformationTask.ValuesSource = $_.GetParameter("ValuesSource")
 	        $transformationTask.OutputPath = $_.GetParameter("OutputPath")
@@ -210,7 +210,7 @@ function Create-TransformationConfigurationFile($TransformationDetails, $OutPath
     [void]$configDocument.Save($OutPath)
 }
 
-function Create-BoostrapConfig
+function Add-BoostrapConfig
 {
     [CmdletBinding()]
     param(
@@ -277,5 +277,4 @@ function Create-BoostrapConfig
     Add-TransformationConfig "transformations.xml"
 }
 
-
-Export-ModuleMember -Function Add-Transformation, Add-TransformationConfig, Invoke-Transformations, Create-BoostrapConfig
+Export-ModuleMember -Function Add-Transformation, Add-TransformationConfig, Invoke-Transformations, Add-BoostrapConfig
