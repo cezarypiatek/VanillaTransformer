@@ -85,6 +85,16 @@ function Load-VanillaTransformerLib{
     Add-Type -Path $dllPath
 }
 
+<#
+.SYNOPSIS
+
+Run transformations of config files
+
+.Parameter ConfigFilePath
+Define file with transformation configuration for which transformation should be run. 
+If not specified, all transformations defined as VanillaTransformerTask inside AfterBuild traget will be run.
+
+#>
 function Invoke-Transformations
 {
     [CmdletBinding()]
@@ -210,15 +220,43 @@ function Create-TransformationConfigurationFile($TransformationDetails, $OutPath
     [void]$configDocument.Save($OutPath)
 }
 
+<#
+.SYNOPSIS 
+
+Bootstrap config files transformations
+
+.PARAMETER Environments
+List of environments for your configs. For each enviroments separate value file will be created.
+
+
+.PARAMETER ConfigFilter
+Define config files extensions for which transformations will be created. If not specied it looks for *.config files
+
+
+.PARAMETER SearchRecurse
+Search for config files in subdirectories
+
+
+.PARAMETER DefaultEnvironment
+The result of transformation for default environment will override original config file.
+
+
+.PARAMETER TransformationsOut
+Output directory for transformations results
+
+
+.PARAMETER Force
+If true, Transformation Configuration Fille will be overrided.
+#>
 function Add-BoostrapConfig
 {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        [string[]]$Enviroments,
+        [string[]]$Environments,
         [string]$ConfigFilter="*.config",
         [switch]$SearchRecurse=$false,
-        [string]$DefaultEnviroment,
+        [string]$DefaultEnvironment,
         [string]$TransformationsOut,
         [switch]$Force
      )
@@ -249,19 +287,19 @@ function Add-BoostrapConfig
             $transformationGroup = @{Pattern = $(Get-RelativePath $patternFilePath -relativeTo $projectPath); Transformations=@()}
             $transformationDetails.Groups += $transformationGroup
 
-            foreach($enviroment in $Enviroments)
+            foreach($environment in $Environments)
             {
-              $valuesFilePath = "$fileDirectory\$filePrefix.values.$enviroment$($fileExtension)"
+              $valuesFilePath = "$fileDirectory\$filePrefix.values.$environment$($fileExtension)"
               if($(Test-Path $valuesFilePath) -eq $false )
               {
                 Out-File -FilePath  $valuesFilePath -Encoding utf8 -InputObject $emptyValuesFileContent
                 [void]$_.ProjectItems.AddFromFile($valuesFilePath)
-                Write-Verbose "`tSuccessfully created file with values for environment: '$enviroment'"
+                Write-Verbose "`tSuccessfully created file with values for environment: '$environment'"
               }else{
-                Write-Verbose "`tFile with values for environment: '$enviroment' already exists"
+                Write-Verbose "`tFile with values for environment: '$environment' already exists"
               }
               
-              $outputPath = if($enviroment -eq $DefaultEnviroment){ $filePath } else{ "$TransformationsOut\$($filePrefix)_$($enviroment)$($fileExtension)" }
+              $outputPath = if($environment -eq $DefaultEnvironment){ $filePath } else{ "$TransformationsOut\$($filePrefix)_$($environment)$($fileExtension)" }
               $transformationGroup.Transformations+= @{
                 Values= $(Get-RelativePath $valuesFilePath -relativeTo $projectPath);
                 Output= $(Get-RelativePath $outputPath -relativeTo $projectPath)
