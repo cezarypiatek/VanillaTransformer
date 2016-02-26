@@ -189,3 +189,4 @@ You can also modify post-transformations set defined on higher level using "add"
 Currently available post-transformations:
 * StripXMLComments
 * ReFormatXML
+* DateTimeStamp
