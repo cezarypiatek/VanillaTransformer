@@ -48,6 +48,7 @@
     <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationRemoveOperation.cs" />
     <Compile Include="Configuration\TransformConfigurationReader.cs" />
     <Compile Include="PostTransformations\PostTransformationsPool.cs" />
+    <Compile Include="PostTransformations\XML\DateTimeStampTransformation.cs" />
     <Compile Include="PostTransformations\XML\StripXMLCommentsTransformation.cs" />
     <Compile Include="PostTransformations\IPostTransformation.cs" />
     <Compile Include="PostTransformations\XML\ReFormatXMLTransformation.cs" />

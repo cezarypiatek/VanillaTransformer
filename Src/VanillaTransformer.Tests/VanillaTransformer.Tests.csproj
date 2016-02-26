@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreTest\TransformConfigurationReaderTests.cs" />
+    <Compile Include="PostTransformations\DateTimeStampTransformationTest.cs" />
     <Compile Include="PostTransformations\ReFormatXMLTest.cs" />
     <Compile Include="PostTransformations\StripXMLCommentTransformationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
