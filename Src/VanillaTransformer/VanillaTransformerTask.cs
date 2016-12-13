@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using Microsoft.Build.Utilities;
 using VanillaTransformer.Configuration;
@@ -117,7 +118,8 @@ namespace VanillaTransformer
 
         private static string GetTransformerName()
         {
-            return typeof (DollarPlaceholderTransformer).Name;
+            var className = ConfigurationManager.AppSettings["transformerName"];
+            return className ?? typeof (DollarPlaceholderTransformer).Name;
         }
     }
 }
