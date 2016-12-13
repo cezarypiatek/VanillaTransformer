@@ -26,7 +26,7 @@ function Add-Transformation($pattern, $values, $output){
 	Write-Host "Transformation has been added successfully."
 }
 
-function Add-TransformationConfig($configFilePath){
+function Add-TransformationConfig($configFilePath, $transformerName){
 	$project = Get-Project
 	$buildProject =  @([Microsoft.Build.Evaluation.ProjectCollection]::GlobalProjectCollection.GetLoadedProjects($project.FullName))[0]
 	$afterBuildTarget= $buildProject.Xml.Targets | Where-Object {$_.Name -eq "AfterBuild"}
@@ -43,6 +43,9 @@ function Add-TransformationConfig($configFilePath){
         return
     }
     $task = $afterBuildTarget.AddTask("VanillaTransformerTask")
+    if(-not([System.String]::IsNullOrWhiteSpace($transformerName))) {
+        $task.SetParameter("TransformerName", $transformerName)
+    }
 	$task.SetParameter("TransformConfiguration", $configFilePath)	
 	$buildProject.Save()
 	$project.Save()
@@ -94,11 +97,15 @@ Run transformations of config files
 Define file with transformation configuration for which transformation should be run. 
 If not specified, all transformations defined as VanillaTransformerTask inside AfterBuild traget will be run.
 
+
+.Parameter TransformerName
+The name of the ITransformer implementation to use.
+
 #>
 function Invoke-Transformations
 {
     [CmdletBinding()]
-    param($ConfigFilePath)
+    param($ConfigFilePath, $TransformerName)
     Load-VanillaTransformerLib
     
     $oldPath = Get-Location
@@ -108,11 +115,17 @@ function Invoke-Transformations
     if(-not([System.String]::IsNullOrWhiteSpace($ConfigFilePath)))
     {
         $transformationTask = New-Object VanillaTransformer.VanillaTransformerTask
+        if(-not([System.String]::IsNullOrWhiteSpace($TransformerName))) {
+            $transformationTask.TransformerName = $TransformerName
+        }
         $transformationTask.TransformConfiguration = $ConfigFilePath
         Invoke-TransformationTask $transformationTask
     }else{
         Get-VanillaTransformerTasks |% {
             $transformationTask = New-Object VanillaTransformer.VanillaTransformerTask
+            if(-not([System.String]::IsNullOrWhiteSpace($TransformerName))) {
+                $transformationTask.TransformerName = $TransformerName
+            }
             $transformationTask.TransformConfiguration = $_.GetParameter("TransformConfiguration")
             $transformationTask.PatternFile = $_.GetParameter("PatternFile")
 	        $transformationTask.ValuesSource = $_.GetParameter("ValuesSource")
@@ -245,10 +258,14 @@ The result of transformation for default environment will override original conf
 Output directory for transformations results
 
 
+.PARAMETER TransformerName
+The name of the ITransformer implementation to use when executing the transformations
+
+
 .PARAMETER Force
 If true, Transformation Configuration Fille will be overrided.
 #>
-function Add-BoostrapConfig
+function Add-BootstrapConfig
 {
     [CmdletBinding()]
     param(
@@ -258,6 +275,7 @@ function Add-BoostrapConfig
         [switch]$SearchRecurse=$false,
         [string]$DefaultEnvironment,
         [string]$TransformationsOut,
+        [string]$TransformerName,
         [switch]$Force
      )
     $project = Get-Project
