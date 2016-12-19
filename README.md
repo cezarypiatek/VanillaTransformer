@@ -33,6 +33,25 @@ After that you can start adding transformation within given build target
   </session-factory>
 </hibernate-configuration>
 ```
+By default VanillaTransformer uses DollarPlaceholderTransformer which replaces placeholders in the following format
+
+```
+${Placeholder_Name}
+```
+If this type of placeholder collides with your file content (ex. NLog config files) you can use **HashBracketPlaceholderTransformer** which accepts placeholders as follows
+
+````
+#[Placeholder_Name]
+```
+To change Transformer type set **TransformerName** paramater to appropiate value
+```XML
+<VanillaTransformerTask 
+	PatternFile="Configs\NHibernate.pattern.config" 
+	ValuesSource="Configs\NHibernate.values.dev.config" 
+	OutputPath="NHibernate.config" 
+	TransformerName="HashBracketPlaceholderTransformer" />
+```
+
 **Example Values file**
 
 ```XML
