@@ -26,7 +26,11 @@ function Add-Transformation($pattern, $values, $output){
 	Write-Host "Transformation has been added successfully."
 }
 
-function Add-TransformationConfig($configFilePath, $transformerName){
+function Add-TransformationConfig{
+    param(
+        $configFilePath, 
+        [string][ValidateSet("DollarPlaceholderTransformer","HashBracketPlaceholderTransformer")]$transformerName
+        )
 	$project = Get-Project
 	$buildProject =  @([Microsoft.Build.Evaluation.ProjectCollection]::GlobalProjectCollection.GetLoadedProjects($project.FullName))[0]
 	$afterBuildTarget= $buildProject.Xml.Targets | Where-Object {$_.Name -eq "AfterBuild"}
@@ -105,7 +109,10 @@ The name of the ITransformer implementation to use.
 function Invoke-Transformations
 {
     [CmdletBinding()]
-    param($ConfigFilePath, $TransformerName)
+    param(
+        $ConfigFilePath, 
+        [string][ValidateSet("DollarPlaceholderTransformer","HashBracketPlaceholderTransformer")]$TransformerName
+         )
     Load-VanillaTransformerLib
     
     $oldPath = Get-Location
@@ -275,7 +282,7 @@ function Add-BootstrapConfig
         [switch]$SearchRecurse=$false,
         [string]$DefaultEnvironment,
         [string]$TransformationsOut,
-        [string]$TransformerName,
+        [string][ValidateSet("DollarPlaceholderTransformer","HashBracketPlaceholderTransformer")]$TransformerName,
         [switch]$Force
      )
     $project = Get-Project
