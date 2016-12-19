@@ -33,6 +33,7 @@
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -54,6 +55,7 @@
     <Compile Include="PostTransformations\XML\ReFormatXMLTransformation.cs" />
     <Compile Include="Configuration\TransformConfiguration.cs" />
     <Compile Include="Transformers\DollarPlaceholderTransformer.cs" />
+    <Compile Include="Transformers\HashBracketPlaceholderTransformer.cs" />
     <Compile Include="ValuesProviders\IValuesProvider.cs" />
     <Compile Include="ITransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
