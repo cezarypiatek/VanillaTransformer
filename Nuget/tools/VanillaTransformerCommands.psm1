@@ -330,7 +330,7 @@ function Add-BootstrapConfig
     Create-TransformationConfigurationFile -TransformationDetails $transformationDetails -OutPath $transformationsFilePath -Force:$Force
     [void]$project.ProjectItems.AddFromFile($transformationsFilePath)
     $project.Save()
-    Add-TransformationConfig "transformations.xml"
+    Add-TransformationConfig "transformations.xml" -transformerName $TransformerName
 }
 
 Export-ModuleMember -Function Add-Transformation, Add-TransformationConfig, Invoke-Transformations, Add-BoostrapConfig
