@@ -40,7 +40,7 @@ ${Placeholder_Name}
 ```
 If this type of placeholder collides with your file content (ex. NLog config files) you can use **HashBracketPlaceholderTransformer** which accepts placeholders as follows
 
-````plaintext
+```plaintext
 #[Placeholder_Name]
 ```
 To change Transformer type set **TransformerName** paramater to appropiate value
