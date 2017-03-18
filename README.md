@@ -2,10 +2,10 @@
 [![vanillafeed MyGet Build Status](https://www.myget.org/BuildSource/Badge/vanillafeed?identifier=a5bad1f8-7580-4e5d-a7ad-2952d2c88719)](https://www.myget.org/)
 
 VanillaTransformer is a simple generic text file transformer. It was designed for configuration transforming as an alternative for [XML-Document-Transform](https://msdn.microsoft.com/en-us/library/dd465326%28v=vs.110%29.aspx) tool. Unlike XML-DT, it works with any kind of text file (not only XML) and is much simpler to use.
-##Nuget package
+## Nuget package
 https://www.nuget.org/packages/VanillaTransformer/
 
-##How to use it.
+## How to use it.
 1. Create pattern file
 2. Create values files
 3. Add transformation within build target
@@ -35,12 +35,12 @@ After that you can start adding transformation within given build target
 ```
 By default VanillaTransformer uses DollarPlaceholderTransformer which replaces placeholders in the following format
 
-```
+```plaintext
 ${Placeholder_Name}
 ```
 If this type of placeholder collides with your file content (ex. NLog config files) you can use **HashBracketPlaceholderTransformer** which accepts placeholders as follows
 
-````
+````plaintext
 #[Placeholder_Name]
 ```
 To change Transformer type set **TransformerName** paramater to appropiate value
@@ -66,7 +66,7 @@ You can also add transformation using powershell command provided with nuget pac
 Add-Transformation "Configs\NHibernate.pattern.config" "Configs\NHibernate.values.dev.config" "NHibernate.config"
 ```
 
-##Transformation Configuration File
+## Transformation Configuration File
 Instead of adding each transformation by editing *.csproj file (what is very uncomfortable) you can create transformation configuration file with all transformations and add it once to project file. To register the configuration file add the following element into csproj file:
 
 ```XML
@@ -113,25 +113,25 @@ You can also define inline values for transformation instead of putting it in se
   </transformationGroup>
 </root>
 ```
-##How to run transformations
+## How to run transformations
 By default VanilaTransformerTask is added to AfterBuild target, so everytime you build your project transformation should be run (unless you have condition attribute on AfterBuild target). You can also run the transformation using the following command
 
 ```PowerShell
 Invoke-Transformations
-`````
+```
 This will search for all VanillaTransformerTask inside the AfterBuild target and run it. If you don't want to run all the transformations, you can specify file with transformations (Transformation Configuration File) to run
 
 ```PowerShell
 Invoke-Transformations -ConfigFilePath transformations.xml
-`````
+```
 
-##Bootstrapping transformations
+## Bootstrapping transformations
 If you already have configurations files and you wan to add transformation for few evenronments (for example: dev, test, stag, prod) you can use the following command
 ```PowerShell
 Add-BoostrapConfig -Enviroments dev, test, prep, prod -DefaultEnvironment dev -TransformationsOut TransformedConfigs
 ```
-Add-BootstrapConfig command does the following:
 
+Add-BootstrapConfig command does the following:
 
 1. Search for config files inside your project directory (by default files with *.config extension, but you could change that by using -ConfigFilter parameter) It search only inside the project main directory (you can use -Recurse parameter to search also in subdirectories)
 
@@ -153,7 +153,7 @@ Sample project before bootstrapping
 ![After bootstrapping](https://raw.githubusercontent.com/cezarypiatek/VanillaTransformer/master/Doc/bootstrap_after.jpg)
 
 
-##Post-Transformations
+## Post-Transformations
 VanillaTransformer supports post-transformations which are apllied to transformed configuration in the form of pipeline.
 You can add post-transformations on any level of VanillaTransformer configuration (root, transformationGroup or transformation level) in the following manner:
 
