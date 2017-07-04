@@ -87,11 +87,13 @@ Add-TransformationConfig "Configs\transformations.xml"
 <root>
   <transformationGroup pattern="Configs\NHibernate.pattern.config">
     <transformation values="NHibernate.values.dev.config" output="NHibernate.config" />
-    <transformation values="NHibernate.values.staging.config" output="Configs\Transformed\NHibernate.config" />
+    <transformation values="NHibernate.values.staging.config" output="Configs\Transformed\Staging\NHibernate.config" />
+    <transformation values="NHibernate.values.prod.config" output="Configs\Transformed\Prod\NHibernate.config" />
   </transformationGroup>
   <transformationGroup pattern="Configs\Web.pattern.config">
     <transformation values="Web.values.dev.config" output="Web.config" />
-    <transformation values="Web.values.staging.config" output="Configs\Transformed\Web.config" />
+    <transformation values="Web.values.staging.config" output="Configs\Transformed\Staging\Web.config" />
+    <transformation values="Web.values.prod.config" output="Configs\Transformed\Prod\Web.config" />
   </transformationGroup>
 </root>
 ```
