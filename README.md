@@ -134,13 +134,19 @@ You can create zip archive with complete configuration files set for given envir
     <transformation values="Web.values.prod.config" output="Web.config" archive="Configs\Transformed\Prod.zip" />
   </transformationGroup>
    <transformationGroup pattern="Configs\Log4net.pattern.config">
-    <transformation values="Log4net.values.dev.config" output="Web.config" />
-    <transformation values="Log4net.values.test.config" output="Web.config" archive="Configs\Transformed\Test.zip" />
-    <transformation values="Log4net.values.staging.config" output="Web.config" archive="Configs\Transformed\Staging.zip" />
-    <transformation values="Log4net.values.prod.config" output="Web.config" archive="Configs\Transformed\Prod.zip" />
+    <transformation values="log4net.values.dev.config" output="log4net.config" />
+    <transformation values="log4net.values.test.config" output="log4net.config" archive="Configs\Transformed\Test.zip" />
+    <transformation values="log4net.values.staging.config" output="log4net.config" archive="Configs\Transformed\Staging.zip" />
+    <transformation values="log4net.values.prod.config" output="log4net.config" archive="Configs\Transformed\Prod.zip" />
   </transformationGroup>
 </root>
 ```
+
+this will create the following zip files
+- Test.zip (NHibernate.config, Web.config, log4net.config)
+- Staging.zip (NHibernate.config, Web.config, log4net.config) 
+- Prod.zip (NHibernate.config, Web.config, log4net.config)
+ 
 
 ## How to run transformations
 By default VanilaTransformerTask is added to AfterBuild target, so everytime you build your project transformation should be run (unless you have condition attribute on AfterBuild target). You can also run the transformation using the following command
