@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using Microsoft.Build.Utilities;
 using VanillaTransformer.Configuration;
+using VanillaTransformer.OutputWriters;
 using VanillaTransformer.Transformers;
 using VanillaTransformer.Utility;
 using VanillaTransformer.ValuesProviders;
@@ -23,6 +25,11 @@ namespace VanillaTransformer
         /// Path to a output file
         /// </summary>
         public string OutputPath { get; set; }
+        
+        /// <summary>
+        /// Path to output archive
+        /// </summary>
+        public string OutputArchivePath { get; set; }
 
         /// <summary>
         /// Path to a file with values required by the pattern file
@@ -56,7 +63,8 @@ namespace VanillaTransformer
                     var configurationValues = transformation.ValuesProvider.GetValues();
                     var transformedConfiguration = configurationTransformer.Transform(configurationPattern, configurationValues);
                     var result = transformation.RunPostTransformations(transformedConfiguration);
-                    File.WriteAllText(transformation.OutputFilePath, result);
+                    var outputWriter = GetOutputWriter(transformation);
+                    outputWriter.Save(result);
                 }
 
                 return true;   
@@ -66,6 +74,16 @@ namespace VanillaTransformer
                 Log.LogError(e.Message);
                 return false;
             }
+        }
+
+
+        private ITransformedOutputWriter GetOutputWriter(TransformConfiguration configuration)
+        {
+            if (configuration.ShouldOutputToArchive())
+            {
+                return new ArchiveTransformedOutputWriter(configuration.OutputArchive, configuration.OutputFilePath);
+            }
+            return new FileTransformedOutputWriter(configuration.OutputFilePath);
         }
 
         private List<TransformConfiguration> GetTransformations()
@@ -83,6 +101,7 @@ namespace VanillaTransformer
                 {
                     PatternFilePath = PatternFile,
                     OutputFilePath = OutputPath,
+                    OutputArchive = OutputArchivePath,
                     ValuesProvider = GetValuesProvider()
                 }
             };

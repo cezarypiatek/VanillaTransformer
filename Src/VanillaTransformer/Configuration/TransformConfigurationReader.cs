@@ -21,6 +21,8 @@ namespace VanillaTransformer.Configuration
 
         private const string OutputPathElementName = "output";
 
+        private const string OutputArchiveElementName = "archive";
+
         private const string PostTransformationElementName = "postTransformations";
 
         private ITextFileReader fileReader;
@@ -62,6 +64,7 @@ namespace VanillaTransformer.Configuration
                             {
                                 PatternFilePath = pattern.Value,
                                 OutputFilePath = y.Attribute(OutputPathElementName).Value,
+                                OutputArchive = y.Attribute(OutputArchiveElementName)?.Value,
                                 ValuesProvider = CreateValuesProvider(y),
                                 PostTransformations = GetPostTranformation(y, groupPostTransformations)
                             }).ToList();

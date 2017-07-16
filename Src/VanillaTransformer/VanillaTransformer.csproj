@@ -35,6 +35,8 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,6 +50,8 @@
     <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationOperationFactory.cs" />
     <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationRemoveOperation.cs" />
     <Compile Include="Configuration\TransformConfigurationReader.cs" />
+    <Compile Include="OutputWriters\FileTransformedOutputWriter.cs" />
+    <Compile Include="OutputWriters\ITransformedOutputWriter.cs" />
     <Compile Include="PostTransformations\PostTransformationsPool.cs" />
     <Compile Include="PostTransformations\XML\DateTimeStampTransformation.cs" />
     <Compile Include="PostTransformations\XML\StripXMLCommentsTransformation.cs" />
@@ -57,6 +61,7 @@
     <Compile Include="Transformers\DollarPlaceholderTransformer.cs" />
     <Compile Include="Transformers\GenericPlaceholderTransformer.cs" />
     <Compile Include="Transformers\HashBracketPlaceholderTransformer.cs" />
+    <Compile Include="OutputWriters\ArchiveTransformedOutputWriter.cs" />
     <Compile Include="ValuesProviders\IValuesProvider.cs" />
     <Compile Include="ITransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
