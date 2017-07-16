@@ -115,6 +115,33 @@ You can also define inline values for transformation instead of putting it in se
   </transformationGroup>
 </root>
 ```
+
+### Output to Zip archive
+You can create zip archive with complete configuration files set for given environment after transformations using archive attribute as follows:
+```XML
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <transformationGroup pattern="Configs\NHibernate.pattern.config">
+    <transformation values="NHibernate.values.dev.config" output="NHibernate.config" />
+    <transformation values="NHibernate.values.test.config" output="NHibernate.config" archive="Configs\Transformed\Test.zip"/>
+    <transformation values="NHibernate.values.staging.config" output="NHibernate.config" archive="Configs\Transformed\Staging.zip"/>
+    <transformation values="NHibernate.values.prod.config" output="NHibernate.config" archive="Configs\Transformed\Prod.zip" />
+  </transformationGroup>
+  <transformationGroup pattern="Configs\Web.pattern.config">
+    <transformation values="Web.values.dev.config" output="Web.config" />
+    <transformation values="Web.values.test.config" output="Web.config" archive="Configs\Transformed\Test.zip" />
+    <transformation values="Web.values.staging.config" output="Web.config" archive="Configs\Transformed\Staging.zip" />
+    <transformation values="Web.values.prod.config" output="Web.config" archive="Configs\Transformed\Prod.zip" />
+  </transformationGroup>
+   <transformationGroup pattern="Configs\Log4net.pattern.config">
+    <transformation values="Log4net.values.dev.config" output="Web.config" />
+    <transformation values="Log4net.values.test.config" output="Web.config" archive="Configs\Transformed\Test.zip" />
+    <transformation values="Log4net.values.staging.config" output="Web.config" archive="Configs\Transformed\Staging.zip" />
+    <transformation values="Log4net.values.prod.config" output="Web.config" archive="Configs\Transformed\Prod.zip" />
+  </transformationGroup>
+</root>
+```
+
 ## How to run transformations
 By default VanilaTransformerTask is added to AfterBuild target, so everytime you build your project transformation should be run (unless you have condition attribute on AfterBuild target). You can also run the transformation using the following command
 
