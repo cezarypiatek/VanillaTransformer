@@ -13,6 +13,8 @@ namespace VanillaTransformer.OutputWriters
 
         public void Save(string result)
         {
+            var fileInfo = new FileInfo(filePath);
+            fileInfo.Directory?.Create();
             File.WriteAllText(filePath, result);
         }
     }

@@ -16,6 +16,9 @@ namespace VanillaTransformer.OutputWriters
 
         public void Save(string result)
         {
+            var archiveFileInfo = new FileInfo(archivePath);
+            archiveFileInfo.Directory?.Create();
+
             using (var archive = GetArchive(archivePath))
             {
                 var archiveFile = GetNewEntry(archive);
