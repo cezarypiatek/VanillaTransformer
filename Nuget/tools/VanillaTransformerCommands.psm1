@@ -340,4 +340,4 @@ function Add-BootstrapConfig
     Add-TransformationConfig "transformations.xml" -transformerName $TransformerName
 }
 
-Export-ModuleMember -Function Add-Transformation, Add-TransformationConfig, Invoke-Transformations, Add-BoostrapConfig
+Export-ModuleMember -Function Add-Transformation, Add-TransformationConfig, Invoke-Transformations, Add-BootstrapConfig
