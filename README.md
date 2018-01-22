@@ -163,7 +163,7 @@ Invoke-Transformations -ConfigFilePath transformations.xml
 ## Bootstrapping transformations
 If you already have configurations files and you wan to add transformation for few evenronments (for example: dev, test, stag, prod) you can use the following command
 ```PowerShell
-Add-BoostrapConfig -Enviroments dev, test, prep, prod -DefaultEnvironment dev -TransformationsOut TransformedConfigs
+Add-BootstrapConfig -Enviroments dev, test, prep, prod -DefaultEnvironment dev -TransformationsOut TransformedConfigs
 ```
 
 Add-BootstrapConfig command does the following:
