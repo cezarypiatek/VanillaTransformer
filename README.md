@@ -38,18 +38,15 @@ By default VanillaTransformer uses DollarPlaceholderTransformer which replaces p
 ```plaintext
 ${Placeholder_Name}
 ```
-If this type of placeholder collides with your file content (ex. NLog config files) you can use **HashBracketPlaceholderTransformer** which accepts placeholders as follows
+If this type of placeholder collides with your file content (ex. NLog config files) you can define custome placeholder pattern using `PlaceholderPatter` parameter (the value must contain `KEY` keyword, for example `${KEY}`).
 
-```plaintext
-#[Placeholder_Name]
-```
-To change Transformer type set **TransformerName** paramater to appropiate value
+To change placeholder pattern set **PlaceholderPatter** paramater to appropiate value
 ```XML
 <VanillaTransformerTask 
 	PatternFile="Configs\NHibernate.pattern.config" 
 	ValuesSource="Configs\NHibernate.values.dev.config" 
 	OutputPath="NHibernate.config" 
-	TransformerName="HashBracketPlaceholderTransformer" />
+	PlaceholderPatter="#[KEY]" />
 ```
 
 **Example Values file**
