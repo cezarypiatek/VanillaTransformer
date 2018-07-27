@@ -250,7 +250,7 @@ namespace VanillaTransformer.Tests.CoreTest
         } 
         
         [Test]
-        public void should_be_able_to_supress_all_post_transformation_on_lower_level_of_configuration()
+        public void should_be_able_to_suppress_all_post_transformation_on_lower_level_of_configuration()
         {
             //ARRANGE
             const string testFilePath = "test.xml";
