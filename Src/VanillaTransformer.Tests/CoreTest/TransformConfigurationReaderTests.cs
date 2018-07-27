@@ -34,6 +34,34 @@ namespace VanillaTransformer.Tests.CoreTest
             Assert.AreEqual("output.xml",result[0].OutputFilePath);
         }
 
+
+        [Test]
+        public void should_be_able_to_read_transformations_from_file_with_placeholder_pattern()
+        {
+            //ARRANGE
+            const string testFilePath = "test.xml";
+            var configurationReader = new TransformConfigurationReader
+            {
+                FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
+                            <root>
+                                <transformationGroup pattern=""aaa.pattern.xml"" placeholderPattern=""#[KEY]"">
+                                    <transformation values=""aaa.values.xml"" output=""output.xml"" />
+                                </transformationGroup>
+                            </root>")
+            };
+            
+            //ACT
+            var result = configurationReader.ReadFromFile(testFilePath);
+
+            //ASSERT
+            Assert.IsNotNull(result);
+            CollectionAssert.IsNotEmpty(result);
+            Assert.AreEqual("aaa.pattern.xml",result[0].PatternFilePath);
+            Assert.IsNotNull(result[0].ValuesProvider);
+            Assert.AreEqual("#[KEY]", result[0].PlaceholderPattern);
+            Assert.AreEqual("output.xml",result[0].OutputFilePath);
+        }
+
         [Test]
         public void should_be_able_to_read_many_transformation_for_single_pattern()
         {

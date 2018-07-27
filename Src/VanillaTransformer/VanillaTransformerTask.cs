@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using Microsoft.Build.Utilities;
 using VanillaTransformer.Configuration;
 using VanillaTransformer.OutputWriters;
@@ -42,10 +41,9 @@ namespace VanillaTransformer
         public string ValuesProviderName { get; set; }
 
         /// <summary>
-        /// Name of the transformer. If empty use default returned by <see cref="GetTransformerName"/>. 
+        /// String that define placeholders format. Every placeholder must contain KEY token. Example "${KEY}"
         /// </summary>
-        public string TransformerName { get; set; }
-
+        public string PlaceholderPattern { get; set; }
 
         /// <summary>
         /// Path to a file with transform configuration
@@ -59,7 +57,7 @@ namespace VanillaTransformer
                 foreach (var transformation in GetTransformations())
                 {
                     var configurationPattern = File.ReadAllText(transformation.PatternFilePath);
-                    var configurationTransformer = GetTransformer();
+                    var configurationTransformer = GetTransformer(transformation.PlaceholderPattern);
                     var configurationValues = transformation.ValuesProvider.GetValues();
                     var transformedConfiguration = configurationTransformer.Transform(configurationPattern, configurationValues);
                     var result = transformation.RunPostTransformations(transformedConfiguration);
@@ -90,9 +88,8 @@ namespace VanillaTransformer
         {
             if (IsTransformConfigurationFileSpecified())
             {
-                var configurationReder = new TransformConfigurationReader();
-                return configurationReder.ReadFromFile(TransformConfiguration);
-
+                var configurationReader = new TransformConfigurationReader();
+                return configurationReader.ReadFromFile(TransformConfiguration);
             }
             
             return new List<TransformConfiguration>
@@ -121,22 +118,14 @@ namespace VanillaTransformer
             return ReflectionHelper.GetInstanceOf<IValuesProvider>(providerName,new []{ValuesSource});
         }
         
-        private ITransformer GetTransformer()
+        private ITransformer GetTransformer(string transformationPlaceholderPattern)
         {
-            var transformerName = string.IsNullOrWhiteSpace(TransformerName)
-                ? GetTransformerName()
-                : TransformerName;
-            return ReflectionHelper.GetInstanceOf<ITransformer>(transformerName);
+            return new GenericPlaceholderTransformer(transformationPlaceholderPattern ?? PlaceholderPattern ?? "${KEY}");
         }
 
         private static string GetDefaultValuesProviderName()
         {
             return typeof(XmlFileConfigurationValuesProvider).Name;
-        }
-
-        private static string GetTransformerName()
-        {
-            return typeof (DollarPlaceholderTransformer).Name;
         }
     }
 }

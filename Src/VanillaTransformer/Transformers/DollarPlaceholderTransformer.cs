@@ -1,8 +1,11 @@
-﻿namespace VanillaTransformer.Transformers
+﻿using System;
+
+namespace VanillaTransformer.Transformers
 {
+    [Obsolete("Use GenericPlaceholderTransformer", false)]
     public class DollarPlaceholderTransformer : GenericPlaceholderTransformer
     {
-        public DollarPlaceholderTransformer() : base("${{{0}}}", @"\$\{(.*?)\}")
+        public DollarPlaceholderTransformer() : base("${KEY}")
         {
         }
     }

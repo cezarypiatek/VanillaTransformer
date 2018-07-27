@@ -4,15 +4,19 @@ using System.Text.RegularExpressions;
 
 namespace VanillaTransformer.Transformers
 {
-    public abstract class GenericPlaceholderTransformer : ITransformer
+    public class GenericPlaceholderTransformer : ITransformer
     {
         private readonly string placeholderFormatString;
         private readonly string placeholderPatternString;
-
-        protected GenericPlaceholderTransformer(string placeholderFormatString, string placeholderPatternString)
+        private const string keyPlaceholder = "KEY";
+        public GenericPlaceholderTransformer(string placeholderPattern)
         {
-            this.placeholderFormatString = placeholderFormatString;
-            this.placeholderPatternString = placeholderPatternString;
+            if (placeholderPattern.Contains(keyPlaceholder) == false)
+            {
+                throw new InvalidPlaceholderPattern(placeholderPattern);
+            }
+            this.placeholderFormatString = placeholderPattern.Replace("{", "{{").Replace("}", "}}").Replace(keyPlaceholder,"{0}");
+            this.placeholderPatternString = Regex.Escape(placeholderPattern).Replace(keyPlaceholder, "(.*?)");
         }
 
         public string Transform(string configurationPattern, IDictionary<string, string> configurationValues)
