@@ -1,5 +1,5 @@
 # VanillaTransformer  
-[![vanillafeed MyGet Build Status](https://www.myget.org/BuildSource/Badge/vanillafeed?identifier=a5bad1f8-7580-4e5d-a7ad-2952d2c88719)](https://www.myget.org/)
+[![Build status](https://ci.appveyor.com/api/projects/status/i0p9uvjxn0or6aif/branch/master?svg=true)](https://ci.appveyor.com/project/cezarypiatek/vanillatransformer/branch/master)
 
 VanillaTransformer is a simple generic text file transformer. It was designed for configuration transforming as an alternative for [XML-Document-Transform](https://msdn.microsoft.com/en-us/library/dd465326%28v=vs.110%29.aspx) tool. Unlike XML-DT, it works with any kind of text file (not only XML) and is much simpler to use.
 ## Nuget package
