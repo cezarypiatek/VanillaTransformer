@@ -11,7 +11,7 @@ namespace VanillaTransformer.PostTransformations.XML
 
         public string Execute(string configContent)
         {
-            return string.Format("<!-- Generated on: {0} --> \r\n{1}", DateTime.Now, configContent);
+            return string.Format("{1}\r\n<!-- Generated on: {0} -->", configContent, DateTime.Now);
         }
     }
 }
