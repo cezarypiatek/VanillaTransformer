@@ -17,9 +17,20 @@ namespace VanillaTransformer.Transformers
 
         public string Transform(string configurationPattern, IDictionary<string, string> configurationValues)
         {
+            var tokens = GetTokens(configurationPattern);
             var transformedConfiguration = ReplacePlaceholdersWithValues(configurationPattern, configurationValues);
-            ValidateTransformedText(transformedConfiguration);
+            ValidateTransformedText(transformedConfiguration, tokens);
             return transformedConfiguration;
+        }
+
+        private IReadOnlyList<string> GetTokens(string text)
+        {
+            var placeholderPattern = new Regex(placeholderPatternString, RegexOptions.Multiline);
+            var matches = placeholderPattern.Matches(text);
+            return matches.OfType<Match>()
+                .Select(match => match.Groups[1].Value)
+                .Distinct()
+                .ToList();
         }
 
         private string ReplacePlaceholdersWithValues(string configurationPattern, IDictionary<string, string> configurationValues)
@@ -27,23 +38,22 @@ namespace VanillaTransformer.Transformers
             var transformedConfiguration = configurationPattern;
             foreach (var value in configurationValues)
             {
-                var valuePlaceholder = string.Format(placeholderFormatString, value.Key);
+                var valuePlaceholder = GetValuePlaceholder(value.Key);
                 transformedConfiguration = transformedConfiguration.Replace(valuePlaceholder, value.Value);
             }
             return transformedConfiguration;
         }
 
-        private void ValidateTransformedText(string transformedText)
+        private string GetValuePlaceholder(string valueKey)
         {
-            var placeholderPattern = new Regex(placeholderPatternString, RegexOptions.Multiline);
-            var matches = placeholderPattern.Matches(transformedText);
-            if (matches.Count > 0)
-            {
-                var missingValuesNames = matches.OfType<Match>()
-                    .Select(match => match.Groups[1].Value)
-                    .Distinct()
-                    .ToList();
+            return string.Format(placeholderFormatString, valueKey);
+        }
 
+        private void ValidateTransformedText(string transformedText, IReadOnlyList<string> tokens)
+        {
+            var missingValuesNames = tokens.Where(x => transformedText.Contains(GetValuePlaceholder(x))).ToList();
+            if (missingValuesNames.Count > 0)
+            {
                 throw new MissingValuesException(missingValuesNames);
             }
         }

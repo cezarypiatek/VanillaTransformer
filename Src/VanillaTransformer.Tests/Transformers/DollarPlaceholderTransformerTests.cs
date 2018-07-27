@@ -72,9 +72,10 @@ namespace VanillaTransformer.Tests.Transformers
             //ARRANGE
             var values = new Dictionary<string, string>
             {
-                {"Val1","XX"}
+                {"Val1","XX"},
+                {"Val3","${NEW_Val3}"}
             };
-            const string pattern = @"<element attr=""${Val1}"" >${Val2}</element>";
+            const string pattern = @"<element attr=""${Val1}"" >${Val2}${Val3}</element>";
             var tansformer = new DollarPlaceholderTransformer();
 
             //ACT & ASSERT
