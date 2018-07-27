@@ -19,7 +19,7 @@ namespace VanillaTransformer.Tests.PostTransformations
             
 
             //ASSERT
-            Assert.IsTrue(Regex.IsMatch(result, @"^<!-- Generated on: (.*?) -->\s{2}.*$", RegexOptions.Singleline));
+            Assert.IsTrue(Regex.IsMatch(result, @"<!-- Generated on: (.*?) -->$", RegexOptions.Singleline));
         }
     }
 }
