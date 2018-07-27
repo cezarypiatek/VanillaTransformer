@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VanillaTransformer.Transformers
 {
-    public class MissingValuesException:ApplicationException
+    public class MissingValuesException : Exception
     {
         public List<string> MissingValuesNames { get; private set; }
 

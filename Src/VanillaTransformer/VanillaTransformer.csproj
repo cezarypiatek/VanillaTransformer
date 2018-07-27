@@ -60,8 +60,9 @@
     <Compile Include="Configuration\TransformConfiguration.cs" />
     <Compile Include="Transformers\DollarPlaceholderTransformer.cs" />
     <Compile Include="Transformers\GenericPlaceholderTransformer.cs" />
-    <Compile Include="Transformers\HashBracketPlaceholderTransformer.cs" />
     <Compile Include="OutputWriters\ArchiveTransformedOutputWriter.cs" />
+    <Compile Include="Transformers\HashBracketPlaceholderTransformer.cs" />
+    <Compile Include="Transformers\InvalidPlaceholderPattern.cs" />
     <Compile Include="ValuesProviders\IValuesProvider.cs" />
     <Compile Include="ITransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

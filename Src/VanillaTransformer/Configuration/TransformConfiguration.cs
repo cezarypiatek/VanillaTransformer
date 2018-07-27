@@ -10,6 +10,8 @@ namespace VanillaTransformer.Configuration
         public string OutputFilePath { get; set; }
         public string OutputArchive { get; set; }
 
+        public string PlaceholderPattern { get; set; }
+
         public IValuesProvider ValuesProvider { get; set; }
         public List<IPostTransformation> PostTransformations { get; set; }
 

@@ -19,6 +19,8 @@ namespace VanillaTransformer.Configuration
 
         private const string PatternSourceElementName = "pattern";
 
+        private const string PlaceholderPattern = "placeholderPattern";
+
         private const string OutputPathElementName = "output";
 
         private const string OutputArchiveElementName = "archive";
@@ -51,22 +53,25 @@ namespace VanillaTransformer.Configuration
                     throw new InvalidFileStructure("There is no root element");
                 }
 
-                var rootPostTransformations = GetPostTranformation(doc.Root, new List<IPostTransformation>());
+                var rootPostTransformations = GetPostTransformation(doc.Root, new List<IPostTransformation>());
                 var result = doc.Root.Elements()
                     .Where(x => x.IsElementWithName(TransformationGroupElementName))
                     .Select(x =>
                     {
-                        var groupPostTransformations = GetPostTranformation(x, rootPostTransformations);
+                        var groupPostTransformations = GetPostTransformation(x, rootPostTransformations);
                         var pattern = x.Attribute(PatternSourceElementName);
+                        var placeholderPattern = x.Attribute(PlaceholderPattern);
+
                         var transformations = x.Elements()
                             .Where(y => y.IsElementWithName(TransformationElementName))
                             .Select(y => new TransformConfiguration
                             {
                                 PatternFilePath = pattern.Value,
+                                PlaceholderPattern = placeholderPattern?.Value,
                                 OutputFilePath = y.Attribute(OutputPathElementName).Value,
                                 OutputArchive = y.Attribute(OutputArchiveElementName)?.Value,
                                 ValuesProvider = CreateValuesProvider(y),
-                                PostTransformations = GetPostTranformation(y, groupPostTransformations)
+                                PostTransformations = GetPostTransformation(y, groupPostTransformations)
                             }).ToList();
                         return transformations;
                     });
@@ -74,7 +79,7 @@ namespace VanillaTransformer.Configuration
             }
         }
 
-        private List<IPostTransformation> GetPostTranformation(XElement node, List<IPostTransformation> inheritedPostTransformations)
+        private List<IPostTransformation> GetPostTransformation(XElement node, List<IPostTransformation> inheritedPostTransformations)
         {
             var configuration = GetPostTransformationsConfiguration(node);
             var result = inheritedPostTransformations.ToList();
