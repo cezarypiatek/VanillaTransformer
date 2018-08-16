@@ -28,6 +28,25 @@ namespace VanillaTransformer.Tests.Transformers
         }
 
         [Test]
+        public void should_be_able_to_transform_pattern_single_occurrence_of_placeholder_with_generic_transformer()
+        {
+            //ARRANGE
+            var values = new Dictionary<string, string>
+            {
+                {"Val1","XX"}
+            };
+            const string pattern = @"<element1>${{Val1}}</element1>";
+            var tansformer = new GenericPlaceholderTransformer("${{KEY}}");
+
+            //ACT
+            var result = tansformer.Transform(pattern, values);
+
+            //ASSERT
+            Assert.IsNotNullOrEmpty(result);
+            Assert.AreEqual("<element1>XX</element1>", result);
+        }
+
+        [Test]
         public void should_be_able_to_transform_pattern_multiple_occurrences_of_the_same_placeholder()
         {
             //ARRANGE
