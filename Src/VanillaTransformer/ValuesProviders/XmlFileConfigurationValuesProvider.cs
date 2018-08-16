@@ -37,18 +37,25 @@ namespace VanillaTransformer.ValuesProviders
                 var doc = XDocument.Load(str, LoadOptions.PreserveWhitespace);
                 if (doc.Root == null)
                 {
-                    throw new InvalidFileStructure("There is no root element");
+                    throw InvalidValuesFileStructure.BecauseMissingRoot(SourceFilePath);
                 }
-                var result = doc.Root.Elements()
-                    .Where(x => x.NodeType == XmlNodeType.Element)
-                    .ToDictionary(el => el.Name.LocalName, el =>
+
+                var result = new Dictionary<string, string>();
+                var valueNodes = doc.Root.Elements()
+                    .Where(x => x.NodeType == XmlNodeType.Element);
+
+                foreach (var el in valueNodes)
+                {
+                    var key = el.Name.LocalName;
+                    if (result.ContainsKey(key))
                     {
-                        if (el.NodeType == XmlNodeType.Element)
-                        {
-                            return el.GetInnerXmlAsText().Replace("\n", "\r\n");
-                        }
-                        return el.Value;
-                    });
+                        throw InvalidValuesFileStructure.BecauseDuplicatedKey(SourceFilePath, key);
+                    }
+                    var value = el.NodeType == XmlNodeType.Element 
+                        ? el.GetInnerXmlAsText().Replace("\n", "\r\n") 
+                        : el.Value;
+                    result.Add(key, value);
+                }
                 return result;
             }
         }

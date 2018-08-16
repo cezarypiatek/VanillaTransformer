@@ -69,7 +69,7 @@ namespace VanillaTransformer
             }
             catch (Exception e)
             {
-                Log.LogError(e.Message);
+                Log.LogError($"VanillaTransformer: {e.Message}");
                 return false;
             }
         }
@@ -90,6 +90,7 @@ namespace VanillaTransformer
             {
                 var configurationReader = new TransformConfigurationReader();
                 return configurationReader.ReadFromFile(TransformConfiguration);
+
             }
             
             return new List<TransformConfiguration>
