@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\InvalidConfigurationFile.cs" />
     <Compile Include="Configuration\PostTransformations\IPostTransformationsConfigurationOperation.cs" />
     <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationAddOperation.cs" />
     <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationClearOperation.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Transformers\MissingValuesException.cs" />
     <Compile Include="Utility\ReflectionHelper.cs" />
     <Compile Include="Utility\ITextFileReader.cs" />
-    <Compile Include="Utility\InvalidFileStructure.cs" />
+    <Compile Include="Utility\InvalidValuesFileStructure.cs" />
     <Compile Include="Utility\SimpleTextFileReader.cs" />
     <Compile Include="Utility\XElementExtensions.cs" />
     <Compile Include="ValuesProviders\XmlInlineConfigurationValuesProvider.cs" />
