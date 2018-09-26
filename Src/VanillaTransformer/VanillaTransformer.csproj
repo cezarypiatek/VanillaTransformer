@@ -51,6 +51,7 @@
     <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationOperationFactory.cs" />
     <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationRemoveOperation.cs" />
     <Compile Include="Configuration\TransformConfigurationReader.cs" />
+    <Compile Include="InputParameters.cs" />
     <Compile Include="OutputWriters\FileTransformedOutputWriter.cs" />
     <Compile Include="OutputWriters\ITransformedOutputWriter.cs" />
     <Compile Include="PostTransformations\PostTransformationsPool.cs" />
@@ -74,8 +75,8 @@
     <Compile Include="Utility\SimpleTextFileReader.cs" />
     <Compile Include="Utility\XElementExtensions.cs" />
     <Compile Include="ValuesProviders\XmlInlineConfigurationValuesProvider.cs" />
-    <Compile Include="VanillaTransformerTask.cs" />
     <Compile Include="ValuesProviders\XmlFileConfigurationValuesProvider.cs" />
+    <Compile Include="VanillaTransformer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
