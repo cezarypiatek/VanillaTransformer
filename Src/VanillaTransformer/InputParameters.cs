@@ -37,5 +37,10 @@ namespace VanillaTransformer
         /// Path to a file with transform configuration
         /// </summary>
         public string TransformConfiguration { get; set; }
+
+        /// <summary>
+        /// If not set, the path of the executable will be taken
+        /// </summary>
+        public string ProjectRootPath { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace VanillaTransformer
         {
             foreach (var transformation in GetTransformations())
             {
+                UpdatePathsWithRootPath(transformation);
                 var configurationPattern = File.ReadAllText(transformation.PatternFilePath);
                 var configurationTransformer = GetTransformer(transformation.PlaceholderPattern);
                 var configurationValues = transformation.ValuesProvider.GetValues();
@@ -47,7 +48,7 @@ namespace VanillaTransformer
             if (IsTransformConfigurationFileSpecified())
             {
                 var configurationReader = new TransformConfigurationReader();
-                return configurationReader.ReadFromFile(_inputParameters.TransformConfiguration);
+                return configurationReader.ReadFromFile(_inputParameters.TransformConfiguration, _inputParameters.ProjectRootPath);
             }
 
             return new List<TransformConfiguration>
@@ -85,6 +86,17 @@ namespace VanillaTransformer
         private static string GetDefaultValuesProviderName()
         {
             return typeof(XmlFileConfigurationValuesProvider).Name;
+        }
+
+        private void UpdatePathsWithRootPath(TransformConfiguration transformConfiguration)
+        {
+            if (string.IsNullOrWhiteSpace(_inputParameters.ProjectRootPath) == false)
+            {
+                transformConfiguration.PatternFilePath =
+                    Path.Combine(_inputParameters.ProjectRootPath, transformConfiguration.PatternFilePath);
+                transformConfiguration.OutputFilePath =
+                    Path.Combine(_inputParameters.ProjectRootPath, transformConfiguration.OutputFilePath);
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using VanillaTransformer.Configuration.PostTransformations;
@@ -43,7 +44,7 @@ namespace VanillaTransformer.Configuration
         }
 
         
-        public List<TransformConfiguration> ReadFromFile(string path)
+        public List<TransformConfiguration> ReadFromFile(string path, string rootPath = "")
         {
             using (var str = FileReader.ReadFile(path))
             {
@@ -72,7 +73,7 @@ namespace VanillaTransformer.Configuration
                             .Where(y => y.IsElementWithName(TransformationElementName))
                             .Select(y =>
                             {
-                                var valuesProvider = CreateValuesProvider(y);
+                                var valuesProvider = CreateValuesProvider(y, rootPath);
                                 if (valuesProvider == null)
                                 {
                                     throw InvalidConfigurationFile.BecauseMissingValuesSource(path, pattern);
@@ -135,11 +136,11 @@ namespace VanillaTransformer.Configuration
             }
         }
 
-        private static IValuesProvider CreateValuesProvider(XElement y)
+        private static IValuesProvider CreateValuesProvider(XElement y, string rootPath)
         {
             if (y.Attribute(ValuesSourceElementName) != null)
             {
-                return new XmlFileConfigurationValuesProvider(y.Attribute(ValuesSourceElementName).Value);
+                return new XmlFileConfigurationValuesProvider(UpdatePathWithRootPath(y.Attribute(ValuesSourceElementName).Value,rootPath));
             }
 
             if (y.Element(ValuesSourceElementName) != null)
@@ -148,6 +149,15 @@ namespace VanillaTransformer.Configuration
             }
 
             return null;
+        }
+
+        private static string UpdatePathWithRootPath(string path, string rootPath)
+        {
+            if (string.IsNullOrWhiteSpace(rootPath) == false)
+            {
+                return Path.Combine(rootPath, path);
+            }
+            return path;
         }
     }
 }
