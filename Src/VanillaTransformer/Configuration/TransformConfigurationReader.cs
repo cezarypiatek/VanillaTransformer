@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using VanillaTransformer.Configuration.PostTransformations;
-using VanillaTransformer.PostTransformations;
-using VanillaTransformer.Utility;
-using VanillaTransformer.ValuesProviders;
+using VanillaTransformer.Core.Configuration.PostTransformations;
+using VanillaTransformer.Core.PostTransformations;
+using VanillaTransformer.Core.Utility;
+using VanillaTransformer.Core.ValuesProviders;
 
-namespace VanillaTransformer.Configuration
+namespace VanillaTransformer.Core.Configuration
 {
     public class TransformConfigurationReader
     {

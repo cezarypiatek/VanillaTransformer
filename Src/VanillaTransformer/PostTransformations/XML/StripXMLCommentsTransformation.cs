@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace VanillaTransformer.PostTransformations.XML
+namespace VanillaTransformer.Core.PostTransformations.XML
 {
     public class StripXMLCommentsTransformation : IPostTransformation
     {

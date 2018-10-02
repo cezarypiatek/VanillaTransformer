@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace VanillaTransformer.Utility
+namespace VanillaTransformer.Core.Utility
 {
     public static class ReflectionHelper
     {

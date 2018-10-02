@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using VanillaTransformer.Utility;
+using VanillaTransformer.Core.Utility;
 
-namespace VanillaTransformer.ValuesProviders
+namespace VanillaTransformer.Core.ValuesProviders
 {
     public class XmlInlineConfigurationValuesProvider:IValuesProvider
     {

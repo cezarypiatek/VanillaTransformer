@@ -1,6 +1,6 @@
 using System;
 
-namespace VanillaTransformer.Configuration
+namespace VanillaTransformer.Core.Configuration
 {
     public class InvalidConfigurationFile : Exception
     {

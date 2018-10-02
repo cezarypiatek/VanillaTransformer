@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 using Moq;
-using VanillaTransformer.Utility;
+using VanillaTransformer.Core.Utility;
 
 namespace VanillaTransformer.Tests.ValuesProviders
 {

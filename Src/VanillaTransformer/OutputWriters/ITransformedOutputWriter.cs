@@ -1,4 +1,4 @@
-namespace VanillaTransformer.OutputWriters
+namespace VanillaTransformer.Core.OutputWriters
 {
     public interface ITransformedOutputWriter
     {

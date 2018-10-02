@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VanillaTransformer.OutputWriters
+namespace VanillaTransformer.Core.OutputWriters
 {
     public class FileTransformedOutputWriter : ITransformedOutputWriter
     {

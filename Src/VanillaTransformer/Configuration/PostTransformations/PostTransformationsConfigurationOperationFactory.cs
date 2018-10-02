@@ -1,7 +1,7 @@
 using System;
 using System.Xml.Linq;
 
-namespace VanillaTransformer.Configuration.PostTransformations
+namespace VanillaTransformer.Core.Configuration.PostTransformations
 {
     public static class PostTransformationsConfigurationOperationFactory
     {

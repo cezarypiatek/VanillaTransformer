@@ -1,6 +1,6 @@
 using System;
 
-namespace VanillaTransformer.Utility
+namespace VanillaTransformer.Core.Utility
 {
     public class InvalidValuesFileStructure: Exception
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VanillaTransformer.Transformers
+namespace VanillaTransformer.Core.Transformers
 {
     [Obsolete("Use GenericPlaceholderTransformer", false)]
     public class HashBracketPlaceholderTransformer : GenericPlaceholderTransformer

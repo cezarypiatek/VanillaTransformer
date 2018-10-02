@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using VanillaTransformer.PostTransformations;
-using VanillaTransformer.ValuesProviders;
+using VanillaTransformer.Core.PostTransformations;
+using VanillaTransformer.Core.ValuesProviders;
 
-namespace VanillaTransformer.Configuration
+namespace VanillaTransformer.Core.Configuration
 {
     public class TransformConfiguration
     {

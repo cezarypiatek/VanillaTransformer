@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VanillaTransformer.PostTransformations.XML
+namespace VanillaTransformer.Core.PostTransformations.XML
 {
     public class DateTimeStampTransformation : IPostTransformation
     {

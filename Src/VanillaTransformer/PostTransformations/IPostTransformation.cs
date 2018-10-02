@@ -1,4 +1,4 @@
-﻿namespace VanillaTransformer.PostTransformations
+﻿namespace VanillaTransformer.Core.PostTransformations
 {
     public interface IPostTransformation
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace VanillaTransformer.Transformers
+namespace VanillaTransformer.Core.Transformers
 {
     public class GenericPlaceholderTransformer : ITransformer
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VanillaTransformer.ValuesProviders
+namespace VanillaTransformer.Core.ValuesProviders
 {
     public interface IValuesProvider
     {

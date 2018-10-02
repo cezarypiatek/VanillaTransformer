@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using VanillaTransformer.PostTransformations;
+using VanillaTransformer.Core.PostTransformations;
 
-namespace VanillaTransformer.Configuration.PostTransformations
+namespace VanillaTransformer.Core.Configuration.PostTransformations
 {
     public class PostTransformationsConfigurationRemoveOperation : IPostTransformationsConfigurationOperation
     {

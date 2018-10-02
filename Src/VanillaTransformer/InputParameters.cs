@@ -1,5 +1,5 @@
 ﻿
-namespace VanillaTransformer
+namespace VanillaTransformer.Core
 {
     public class InputParameters
     {

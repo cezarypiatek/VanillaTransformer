@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanillaTransformer", "VanillaTransformer\VanillaTransformer.csproj", "{0BECE7F3-2969-4701-8F4C-2F7D3C12C0A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanillaTransformer.Core", "VanillaTransformer\VanillaTransformer.Core.csproj", "{0BECE7F3-2969-4701-8F4C-2F7D3C12C0A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9805560D-F5DC-4F43-9DCA-C8490161B6ED}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{980556
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanillaTransformer.Tests", "VanillaTransformer.Tests\VanillaTransformer.Tests.csproj", "{8DCD5B1C-2975-44A8-89BB-A47867CE2A92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanillaTransformer.Task", "VanillaTransformer.Task\VanillaTransformer.Task.csproj", "{93ABCED2-A424-45F6-AE44-3748BB1515F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanillaTransformer", "VanillaTransformer.Task\VanillaTransformer.csproj", "{93ABCED2-A424-45F6-AE44-3748BB1515F2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanillaTransformer.Console", "VanillaTransformer.Console\VanillaTransformer.Console.csproj", "{F3CB9788-E9AA-4989-A25E-0A07F37500FD}"
 EndProject

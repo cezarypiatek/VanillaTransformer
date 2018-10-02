@@ -4,4 +4,4 @@ if not "%PackageVersion%" == "" (
    set version=%PackageVersion%
 )
 set config="Release"
-nuget pack ..\Src\VanillaTransformer.Task\VanillaTransformerTask.nuspec -NoPackageAnalysis -verbosity detailed -o ./ -Version %version% -p Configuration="%config%"
+nuget pack ..\Src\VanillaTransformer\VanillaTransformerTask.nuspec -NoPackageAnalysis -verbosity detailed -o ./ -Version %version% -p Configuration="%config%"

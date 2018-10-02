@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using VanillaTransformer.Configuration;
-using VanillaTransformer.OutputWriters;
-using VanillaTransformer.Transformers;
-using VanillaTransformer.Utility;
-using VanillaTransformer.ValuesProviders;
+using VanillaTransformer.Core.Configuration;
+using VanillaTransformer.Core.OutputWriters;
+using VanillaTransformer.Core.Transformers;
+using VanillaTransformer.Core.Utility;
+using VanillaTransformer.Core.ValuesProviders;
 
-namespace VanillaTransformer
+namespace VanillaTransformer.Core
 {
     public class VanillaTransformer : IVanillaTransformer
     {

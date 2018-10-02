@@ -52,9 +52,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VanillaTransformer\VanillaTransformer.csproj">
+    <ProjectReference Include="..\VanillaTransformer\VanillaTransformer.Core.csproj">
       <Project>{0bece7f3-2969-4701-8f4c-2f7d3c12c0a9}</Project>
-      <Name>VanillaTransformer</Name>
+      <Name>VanillaTransformer.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

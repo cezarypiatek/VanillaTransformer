@@ -1,11 +1,13 @@
 ﻿using System;
+using Microsoft.Build.Utilities;
+using VanillaTransformer.Core;
 
-namespace VanillaTransformer.Task
+namespace VanillaTransformer
 {
     /// <summary>
     /// MsBuild Task that allows to make a transformation on text files
     /// </summary>
-    public class VanillaTransformerTask : Microsoft.Build.Utilities.Task
+    public class VanillaTransformerTask : Task
     {
         public string PatternFile { get; set; }
 
@@ -52,7 +54,7 @@ namespace VanillaTransformer.Task
                     TransformConfiguration = TransformConfiguration
                 };
 
-                IVanillaTransformer vanillaTransformer = new VanillaTransformer(inputParameters);
+                IVanillaTransformer vanillaTransformer = new Core.VanillaTransformer(inputParameters);
                 vanillaTransformer.PrepareAndLaunchTransform();
                 return true;
             }
@@ -63,7 +65,6 @@ namespace VanillaTransformer.Task
             }
         }
 
-
-    
+  
     }
 }

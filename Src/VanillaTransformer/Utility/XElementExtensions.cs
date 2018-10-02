@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Linq;
 
-namespace VanillaTransformer.Utility
+namespace VanillaTransformer.Core.Utility
 {
     public static class XElementExtensions
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VanillaTransformer.Transformers
+namespace VanillaTransformer.Core.Transformers
 {
     public class MissingValuesException : Exception
     {

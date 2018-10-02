@@ -1,7 +1,6 @@
 ﻿using System;
-using System.IO;
 using Fclp;
-using Fclp.Internals.Extensions;
+using VanillaTransformer.Core;
 
 namespace VanillaTransformer.Console
 {
@@ -17,7 +16,7 @@ namespace VanillaTransformer.Console
                 var result = parser.Parse(args);
                 if (result.HasErrors == false)
                 {
-                    IVanillaTransformer vanillaTransformer = new VanillaTransformer(parser.Object);
+                    IVanillaTransformer vanillaTransformer = new Core.VanillaTransformer(parser.Object);
                     vanillaTransformer.PrepareAndLaunchTransform();
                 }
             }

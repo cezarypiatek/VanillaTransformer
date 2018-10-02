@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 
-namespace VanillaTransformer.OutputWriters
+namespace VanillaTransformer.Core.OutputWriters
 {
     public class ArchiveTransformedOutputWriter : ITransformedOutputWriter
     {

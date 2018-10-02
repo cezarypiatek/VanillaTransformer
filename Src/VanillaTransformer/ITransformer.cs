@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VanillaTransformer
+namespace VanillaTransformer.Core
 {
     public interface ITransformer
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace VanillaTransformer.Transformers
+namespace VanillaTransformer.Core.Transformers
 {
     public class InvalidPlaceholderPattern:Exception
     {

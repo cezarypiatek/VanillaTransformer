@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace VanillaTransformer.Utility
+namespace VanillaTransformer.Core.Utility
 {
     public interface ITextFileReader
     {
