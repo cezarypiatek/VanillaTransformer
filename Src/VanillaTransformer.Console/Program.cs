@@ -17,8 +17,11 @@ namespace VanillaTransformer.Console
                 if (result.HasErrors == false)
                 {
                     IVanillaTransformer vanillaTransformer = new Core.VanillaTransformer(parser.Object);
-                    vanillaTransformer.PrepareAndLaunchTransform();
+                    vanillaTransformer.LaunchTransformations();
                 }
+                else
+                  System.Console.WriteLine(result.ErrorText);
+                                        
             }
             catch (Exception e)
             {

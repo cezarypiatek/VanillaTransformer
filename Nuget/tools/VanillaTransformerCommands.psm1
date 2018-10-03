@@ -91,9 +91,9 @@ function Load-VanillaTransformerLib{
 	    $dllCorePath = VanillaTransformer.Core.dll
         $dllPath = VanillaTransformer.dll
     }  
-	
+
+    Add-Type -Path $dllCorePath	
     Add-Type -Path $dllPath
-    Add-Type -Path $dllCorePath
 }
 
 <#

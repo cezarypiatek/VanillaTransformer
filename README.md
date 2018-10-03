@@ -241,3 +241,24 @@ Currently available post-transformations:
 * StripXMLComments
 * ReFormatXML
 * DateTimeStamp
+
+
+Console app usage:
+
+`-t, --TransformConfiguration`  transformations.xml path
+
+`-r, --ProjectRootPath` (optional) root folder path (exec path will be taken if not provideed)
+
+`-p, --PatternFile` pattern file path 
+
+`-s lub --ValuesSource` value file path
+
+`-o lub --OutputPath` output file path
+
+`-h lub --PlaceholderPattern` palceholder pattern e.g.: ${{KEY}} 
+
+examples:
+
+`--TransformConfiguration "../Configs/transformations.xml" --ProjectRootPath "C:\MyProject"`
+
+`-p "../Configs/Transformation settings\Web.pattern.config" -o "../Configs/Web.config" -s "../Configs\Transformation settings\Web.values.dev.config" -h "${{KEY}}"`

@@ -55,7 +55,7 @@ namespace VanillaTransformer
                 };
 
                 IVanillaTransformer vanillaTransformer = new Core.VanillaTransformer(inputParameters);
-                vanillaTransformer.PrepareAndLaunchTransform();
+                vanillaTransformer.LaunchTransformations();
                 return true;
             }
             catch (Exception e)

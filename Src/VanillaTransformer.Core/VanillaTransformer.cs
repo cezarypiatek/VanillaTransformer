@@ -17,7 +17,7 @@ namespace VanillaTransformer.Core
             _inputParameters = inputParameters;
         }
 
-        public void PrepareAndLaunchTransform()
+        public void LaunchTransformations()
         {
             foreach (var transformation in GetTransformations())
             {
@@ -102,6 +102,6 @@ namespace VanillaTransformer.Core
 
     public interface IVanillaTransformer
     {
-        void PrepareAndLaunchTransform();
+        void LaunchTransformations();
     }
 }
