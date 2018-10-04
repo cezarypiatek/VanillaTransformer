@@ -243,7 +243,8 @@ Currently available post-transformations:
 * DateTimeStamp
 
 
-Console app usage:
+# Console app
+VannilaTransformer ships also in the form of console app which can be used directly from the command line. Here's the list of accepted options (they are the counterparts of MsBuildTask parameters):
 
 `-t, --TransformConfiguration`  transformations.xml path
 
@@ -251,14 +252,16 @@ Console app usage:
 
 `-p, --PatternFile` pattern file path 
 
-`-s lub --ValuesSource` value file path
+`-s, --ValuesSource` value file path
 
-`-o lub --OutputPath` output file path
+`-o, --OutputPath` output file path
 
-`-h lub --PlaceholderPattern` palceholder pattern e.g.: ${{KEY}} 
+`-h, --PlaceholderPattern` palceholder pattern e.g.: ${{KEY}}
 
-examples:
+`-?, --help` Print list of accepted parameters 
 
-`--TransformConfiguration "../Configs/transformations.xml" --ProjectRootPath "C:\MyProject"`
+## Examples
 
-`-p "../Configs/Transformation settings\Web.pattern.config" -o "../Configs/Web.config" -s "../Configs\Transformation settings\Web.values.dev.config" -h "${{KEY}}"`
+`VanillaTransformer.Console.exe --TransformConfiguration "../Configs/transformations.xml" --ProjectRootPath "C:\MyProject"`
+
+`VanillaTransformer.Console.exe -p "../Configs/Transformation settings\Web.pattern.config" -o "../Configs/Web.config" -s "../Configs\Transformation settings\Web.values.dev.config" -h "${{KEY}}"`
