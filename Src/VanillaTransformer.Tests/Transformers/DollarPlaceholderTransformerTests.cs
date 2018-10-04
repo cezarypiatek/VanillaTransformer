@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using VanillaTransformer.Transformers;
+using VanillaTransformer.Core.Transformers;
 
 namespace VanillaTransformer.Tests.Transformers
 {

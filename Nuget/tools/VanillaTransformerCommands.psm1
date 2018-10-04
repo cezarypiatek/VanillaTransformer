@@ -85,10 +85,14 @@ function Invoke-TransformationTask($transformationTask)
 
 function Load-VanillaTransformerLib{
     $dllPath = Join-Path $toolsPath VanillaTransformer.dll
+	$dllCorePath = Join-Path $toolsPath VanillaTransformer.Core.dll
     if((Test-Path $dllPath) -eq $false)
     {
+	    $dllCorePath = VanillaTransformer.Core.dll
         $dllPath = VanillaTransformer.dll
-    }    
+    }  
+
+    Add-Type -Path $dllCorePath	
     Add-Type -Path $dllPath
 }
 

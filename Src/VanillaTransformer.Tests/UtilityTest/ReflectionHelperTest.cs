@@ -1,7 +1,8 @@
 ﻿using NUnit.Framework;
-using VanillaTransformer.Transformers;
-using VanillaTransformer.Utility;
-using VanillaTransformer.ValuesProviders;
+using VanillaTransformer.Core;
+using VanillaTransformer.Core.Transformers;
+using VanillaTransformer.Core.Utility;
+using VanillaTransformer.Core.ValuesProviders;
 
 namespace VanillaTransformer.Tests.UtilityTest
 {
