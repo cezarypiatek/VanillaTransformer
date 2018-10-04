@@ -51,10 +51,12 @@ namespace VanillaTransformer
                     OutputPath = OutputPath,
                     PatternFile = PatternFile,
                     PlaceholderPattern = PlaceholderPattern,
-                    TransformConfiguration = TransformConfiguration
+                    TransformConfiguration = TransformConfiguration,
+                    ValuesProviderName = ValuesProviderName,
+                    ValuesSource = ValuesSource
                 };
 
-                IVanillaTransformer vanillaTransformer = new Core.VanillaTransformer(inputParameters);
+                var vanillaTransformer = new Core.VanillaTransformer(inputParameters);
                 vanillaTransformer.LaunchTransformations();
                 return true;
             }
@@ -64,7 +66,5 @@ namespace VanillaTransformer
                 return false;
             }
         }
-
-  
     }
 }
