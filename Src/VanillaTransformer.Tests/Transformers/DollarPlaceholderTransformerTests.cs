@@ -17,10 +17,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val1","XX"}
             };
             const string pattern = @"<element1>${Val1}</element1>";
-            var tansformer = new DollarPlaceholderTransformer();
+            var transformer = new DollarPlaceholderTransformer();
 
             //ACT
-            var result = tansformer.Transform(pattern, values);
+            var result = transformer.Transform(pattern, values);
 
             //ASSERT
             Assert.IsNotNullOrEmpty(result);
@@ -36,10 +36,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val1","XX"}
             };
             const string pattern = @"<element1>${{Val1}}</element1>";
-            var tansformer = new GenericPlaceholderTransformer("${{KEY}}");
+            var transformer = new GenericPlaceholderTransformer("${{KEY}}");
 
             //ACT
-            var result = tansformer.Transform(pattern, values);
+            var result = transformer.Transform(pattern, values);
 
             //ASSERT
             Assert.IsNotNullOrEmpty(result);
@@ -55,10 +55,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val1","XX"}
             };
             const string pattern = @"<element attr=""${Val1}"" >${Val1}</element>";
-            var tansformer = new DollarPlaceholderTransformer();
+            var transformer = new DollarPlaceholderTransformer();
 
             //ACT
-            var result = tansformer.Transform(pattern, values);
+            var result = transformer.Transform(pattern, values);
 
             //ASSERT
             Assert.IsNotNullOrEmpty(result);
@@ -75,10 +75,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val2","YY"}
             };
             const string pattern = @"<element attr=""${Val1}"" >${Val2}</element>";
-            var tansformer = new DollarPlaceholderTransformer();
+            var transformer = new DollarPlaceholderTransformer();
 
             //ACT
-            var result = tansformer.Transform(pattern, values);
+            var result = transformer.Transform(pattern, values);
 
             //ASSERT
             Assert.IsNotNullOrEmpty(result);
@@ -95,10 +95,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val3","${NEW_Val3}"}
             };
             const string pattern = @"<element attr=""${Val1}"" >${Val2}${Val3}</element>";
-            var tansformer = new DollarPlaceholderTransformer();
+            var transformer = new DollarPlaceholderTransformer();
 
             //ACT & ASSERT
-            var exception = Assert.Throws<MissingValuesException>(() => tansformer.Transform(pattern, values));
+            var exception = Assert.Throws<MissingValuesException>(() => transformer.Transform(pattern, values));
             Assert.AreEqual(1, exception.MissingValuesNames.Count);
             Assert.AreEqual("Val2", exception.MissingValuesNames.First());
         }

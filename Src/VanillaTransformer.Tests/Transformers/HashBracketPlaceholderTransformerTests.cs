@@ -17,10 +17,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val1","XX"}
             };
             const string pattern = @"<element1>#[Val1]</element1>";
-            var tansformer = new HashBracketPlaceholderTransformer();
+            var transformer = new HashBracketPlaceholderTransformer();
 
             //ACT
-            var result = tansformer.Transform(pattern, values);
+            var result = transformer.Transform(pattern, values);
 
             //ASSERT
             Assert.IsNotNullOrEmpty(result);
@@ -36,10 +36,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val1","XX"}
             };
             const string pattern = @"<element attr=""#[Val1]"" >#[Val1]</element>";
-            var tansformer = new HashBracketPlaceholderTransformer();
+            var transformer = new HashBracketPlaceholderTransformer();
 
             //ACT
-            var result = tansformer.Transform(pattern, values);
+            var result = transformer.Transform(pattern, values);
 
             //ASSERT
             Assert.IsNotNullOrEmpty(result);
@@ -56,10 +56,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val2","YY"}
             };
             const string pattern = @"<element attr=""#[Val1]"" >#[Val2]</element>";
-            var tansformer = new HashBracketPlaceholderTransformer();
+            var transformer = new HashBracketPlaceholderTransformer();
 
             //ACT
-            var result = tansformer.Transform(pattern, values);
+            var result = transformer.Transform(pattern, values);
 
             //ASSERT
             Assert.IsNotNullOrEmpty(result);
@@ -75,10 +75,10 @@ namespace VanillaTransformer.Tests.Transformers
                 {"Val1","XX"}
             };
             const string pattern = @"<element attr=""#[Val1]"" >#[Val2]</element>";
-            var tansformer = new HashBracketPlaceholderTransformer();
+            var transformer = new HashBracketPlaceholderTransformer();
 
             //ACT & ASSERT
-            var exception = Assert.Throws<MissingValuesException>(() => tansformer.Transform(pattern, values));
+            var exception = Assert.Throws<MissingValuesException>(() => transformer.Transform(pattern, values));
             Assert.AreEqual(1, exception.MissingValuesNames.Count);
             Assert.AreEqual("Val2", exception.MissingValuesNames.First());
         }
