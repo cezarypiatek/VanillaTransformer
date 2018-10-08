@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1052036c-7d4d-4aee-b247-de3dabbc3517</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>VanillaTransformer.Core.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\InvalidConfigurationFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\PostTransformations\IPostTransformationsConfigurationOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\PostTransformations\PostTransformationsConfigurationAddOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\PostTransformations\PostTransformationsConfigurationClearOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\PostTransformations\PostTransformationsConfigurationOperationFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\PostTransformations\PostTransformationsConfigurationRemoveOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\TransformConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\TransformConfigurationReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITransformer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OutputWriters\ArchiveTransformedOutputWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OutputWriters\FileTransformedOutputWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OutputWriters\ITransformedOutputWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PostTransformations\IPostTransformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PostTransformations\PostTransformationsPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PostTransformations\XML\DateTimeStampTransformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PostTransformations\XML\ReFormatXMLTransformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PostTransformations\XML\StripXMLCommentsTransformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformers\DollarPlaceholderTransformer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformers\GenericPlaceholderTransformer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformers\HashBracketPlaceholderTransformer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformers\InvalidPlaceholderPattern.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformers\MissingValuesException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\InvalidValuesFileStructure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\ITextFileReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\ReflectionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\SimpleTextFileReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\XElementExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValuesProviders\IValuesProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValuesProviders\XmlFileConfigurationValuesProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValuesProviders\XmlInlineConfigurationValuesProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VanillaTransformer.cs" />
+  </ItemGroup>
+</Project>

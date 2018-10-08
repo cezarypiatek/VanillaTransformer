@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build\*" PackagePath="build\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.8.166" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.8.166" />
+  </ItemGroup>
+
+  <Import Project="..\VanillaTransformer.Core\VanillaTransformer.Core.Shared.projitems" Label="Shared" />
+
+</Project>

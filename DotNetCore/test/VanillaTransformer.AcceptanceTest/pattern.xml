@@ -1,0 +1,3 @@
+﻿<root>
+	<element attr="${{Val1}}">${{Val2}}</element>
+</root>
