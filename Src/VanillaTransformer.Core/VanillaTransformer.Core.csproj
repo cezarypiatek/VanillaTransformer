@@ -1,87 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0BECE7F3-2969-4701-8F4C-2F7D3C12C0A9}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VanillaTransformer.Core</RootNamespace>
-    <AssemblyName>VanillaTransformer.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyTitle>VanillaTransformer.Core</AssemblyTitle>
+    <Product>VanillaTransformer.Core</Product>
+    <Copyright>Copyright ©  2015</Copyright>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Configuration\InvalidConfigurationFile.cs" />
-    <Compile Include="Configuration\PostTransformations\IPostTransformationsConfigurationOperation.cs" />
-    <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationAddOperation.cs" />
-    <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationClearOperation.cs" />
-    <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationOperationFactory.cs" />
-    <Compile Include="Configuration\PostTransformations\PostTransformationsConfigurationRemoveOperation.cs" />
-    <Compile Include="Configuration\TransformConfigurationReader.cs" />
-    <Compile Include="InputParameters.cs" />
-    <Compile Include="OutputWriters\FileTransformedOutputWriter.cs" />
-    <Compile Include="OutputWriters\ITransformedOutputWriter.cs" />
-    <Compile Include="PostTransformations\PostTransformationsPool.cs" />
-    <Compile Include="PostTransformations\XML\DateTimeStampTransformation.cs" />
-    <Compile Include="PostTransformations\XML\StripXMLCommentsTransformation.cs" />
-    <Compile Include="PostTransformations\IPostTransformation.cs" />
-    <Compile Include="PostTransformations\XML\ReFormatXMLTransformation.cs" />
-    <Compile Include="Configuration\TransformConfiguration.cs" />
-    <Compile Include="Transformers\DollarPlaceholderTransformer.cs" />
-    <Compile Include="Transformers\GenericPlaceholderTransformer.cs" />
-    <Compile Include="OutputWriters\ArchiveTransformedOutputWriter.cs" />
-    <Compile Include="Transformers\HashBracketPlaceholderTransformer.cs" />
-    <Compile Include="Transformers\InvalidPlaceholderPattern.cs" />
-    <Compile Include="ValuesProviders\IValuesProvider.cs" />
-    <Compile Include="ITransformer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transformers\MissingValuesException.cs" />
-    <Compile Include="Utility\ReflectionHelper.cs" />
-    <Compile Include="Utility\ITextFileReader.cs" />
-    <Compile Include="Utility\InvalidValuesFileStructure.cs" />
-    <Compile Include="Utility\SimpleTextFileReader.cs" />
-    <Compile Include="Utility\XElementExtensions.cs" />
-    <Compile Include="ValuesProviders\XmlInlineConfigurationValuesProvider.cs" />
-    <Compile Include="ValuesProviders\XmlFileConfigurationValuesProvider.cs" />
-    <Compile Include="VanillaTransformer.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
