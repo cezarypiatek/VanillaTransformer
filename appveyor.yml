@@ -1,0 +1,22 @@
+version: 2.0.0.{build}
+image: Visual Studio 2019
+configuration: Release
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+before_build:
+- ps: >-
+    dotnet restore src
+build:
+  verbosity: minimal
+after_build:
+- ps: >-
+    Compress-Archive -Path ".\Src\VanillaTransformer.Console\bin\Release\net472\*.*" -DestinationPath ./VanillaTransformerConsole.zip -Force -Verbose
+artifacts:
+- path: ./Src/**/bin/Release/*.nupkg
+- path: ./VanillaTransformerConsole.zip
