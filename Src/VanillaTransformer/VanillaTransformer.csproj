@@ -13,6 +13,7 @@
     <PackageProjectUrl>https://github.com/cezarypiatek/VanillaTransformer</PackageProjectUrl>
     <PackageReleaseNotes>Added the ability to define transformation in separated xml file instead of inside csproj file</PackageReleaseNotes>
     <PackageTags>Configuration Transformation</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
