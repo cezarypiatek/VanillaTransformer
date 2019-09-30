@@ -10,7 +10,7 @@ https://www.nuget.org/packages/VanillaTransformer/
 2. Create values files
 3. Add transformation within build target
 
-Currently VanillaTransformer works as **MsBuildTask**. You can install it using nuget or add it manually to your *.csproj file as follows:
+VanillaTransformer works as **MsBuildTask**. You can install it using nuget or add it manually to your *.csproj file as follows:
 ```XML
 <UsingTask TaskName="VanillaTransformerTask" AssemblyFile="VanillaTransformer.dll" />
 ```
@@ -244,7 +244,14 @@ Currently available post-transformations:
 
 
 # Console app
-VannilaTransformer ships also in the form of console app which can be used directly from the command line. Here's the list of accepted options (they are the counterparts of MsBuildTask parameters):
+VannilaTransformer ships also in the form of console app which can be used directly from the command line.  You can download it from the [Releases page](https://github.com/cezarypiatek/VanillaTransformer/releases) or install as a dotnet CLI global tools:
+
+```
+dotnet tool install --global VanillaTransformer.Console
+```
+
+
+Here's the list of accepted options (they are the counterparts of MsBuildTask parameters):
 
 `-t, --TransformConfiguration`  transformations.xml path
 
