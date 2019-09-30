@@ -31,4 +31,8 @@
   <ItemGroup>
     <ProjectReference Include="..\VanillaTransformer.Core\VanillaTransformer.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(OutputPath)\*.*" Pack="true" PackagePath="tools/" Visible="false" />
+    <None Include="VanillaTransformer.targets" Pack="true" PackagePath="build/" Visible="false" />
+  </ItemGroup>
 </Project>
