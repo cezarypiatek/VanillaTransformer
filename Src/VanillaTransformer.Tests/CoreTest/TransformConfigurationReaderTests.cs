@@ -117,6 +117,44 @@ namespace VanillaTransformer.Tests.CoreTest
             Assert.IsNotNull(values);
             Assert.IsTrue(values.ContainsKey("Val1"));
             Assert.AreEqual(values["Val1"], "AAA");
+        }
+        
+        [Test]
+        public void should_be_able_to_enrich_inline_values_with_values_group()
+        {
+            //ARRANGE
+            const string testFilePath = "test.xml";
+            var configurationReader = new TransformConfigurationReader
+            {
+                FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
+                            <root>
+                                <transformationGroup pattern=""aaa.pattern.xml"">
+                                    <transformation valuesGroup=""SampleGroup"" output=""output.xml"">
+                                        <values>
+                                            <Val1>AAA</Val1>
+                                            <Val3>CCC</Val3>
+                                        </values>
+                                    </transformation>
+                                </transformationGroup>
+                                <valuesGroup name=""SampleGroup"">
+                                    <Val1>ZZZ</Val1>
+                                    <Val2>BBB</Val2>
+                                </valuesGroup>
+                            </root>")
+            };
+            var transformConfigurations = configurationReader.ReadFromFile(testFilePath);
+            var transformationToTest = transformConfigurations.First();
+
+            //ACT
+            var values = transformationToTest.ValuesProvider.GetValues();
+
+
+            //ASSERT
+            Assert.IsNotNull(values);
+            Assert.AreEqual(3, values.Count);
+            Assert.AreEqual(values["Val1"], "AAA");
+            Assert.AreEqual(values["Val2"], "BBB");
+            Assert.AreEqual(values["Val3"], "CCC");
         }  
         
         

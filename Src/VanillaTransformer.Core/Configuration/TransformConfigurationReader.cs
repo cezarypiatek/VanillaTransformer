@@ -15,6 +15,8 @@ namespace VanillaTransformer.Core.Configuration
         private const string ValuesSourceElementName = "values";
 
         private const string TransformationGroupElementName = "transformationGroup";
+        
+        private const string ValuesGroupElementName = "valuesGroup";
 
         private const string TransformationElementName = "transformation";
 
@@ -54,6 +56,8 @@ namespace VanillaTransformer.Core.Configuration
                     throw InvalidConfigurationFile.BecauseMissingRoot(path);
                 }
 
+                var valuesGroups = ReadValuesGroups(path, doc.Root);
+
                 var rootPostTransformations = GetPostTransformation(doc.Root, new List<IPostTransformation>(), path);
                 var result = doc.Root.Elements()
                     .Where(x => x.IsElementWithName(TransformationGroupElementName))
@@ -73,7 +77,7 @@ namespace VanillaTransformer.Core.Configuration
                             .Where(y => y.IsElementWithName(TransformationElementName))
                             .Select(y =>
                             {
-                                var valuesProvider = CreateValuesProvider(y, rootPath);
+                                var valuesProvider = CreateValuesProvider(y, rootPath, valuesGroups, path);
                                 if (valuesProvider == null)
                                 {
                                     throw InvalidConfigurationFile.BecauseMissingValuesSource(path, pattern);
@@ -100,6 +104,27 @@ namespace VanillaTransformer.Core.Configuration
                     });
                 return result.SelectMany(x => x).ToList();
             }
+        }
+
+        private static Dictionary<string, XmlInlineConfigurationValuesProvider> ReadValuesGroups(string path, XElement rootElement)
+        {
+            return rootElement.Elements()
+                .Where(x => x.IsElementWithName(ValuesGroupElementName))
+                .Select(x =>
+                {
+                    var groupName = x.Attribute("name")?.Value;
+                    if (string.IsNullOrWhiteSpace(groupName))
+                    {
+                        throw InvalidConfigurationFile.BecauseMissingGroupName(path);
+                    }
+
+                    var valuesProvider = new XmlInlineConfigurationValuesProvider(x);
+                    return new
+                    {
+                        groupName,
+                        valuesProvider
+                    };
+                }).ToDictionary(el => el.groupName, el => el.valuesProvider);
         }
 
         private List<IPostTransformation> GetPostTransformation(XElement node,
@@ -136,19 +161,46 @@ namespace VanillaTransformer.Core.Configuration
             }
         }
 
-        private static IValuesProvider CreateValuesProvider(XElement y, string rootPath)
+        private IValuesProvider CreateValuesProvider(XElement node, string rootPath, Dictionary<string, XmlInlineConfigurationValuesProvider> valuesGroups, string configPath)
         {
-            if (y.Attribute(ValuesSourceElementName) != null)
+            var underlyingProviders = GetValuesProviders(node, rootPath, valuesGroups, configPath).ToList();
+            if (underlyingProviders.Count > 0)
             {
-                return new XmlFileConfigurationValuesProvider(UpdatePathWithRootPath(y.Attribute(ValuesSourceElementName).Value,rootPath));
+                return new CompositeValuesProvider(underlyingProviders);
             }
-
-            if (y.Element(ValuesSourceElementName) != null)
-            {
-                return new XmlInlineConfigurationValuesProvider(y.Element(ValuesSourceElementName));
-            }
-
             return null;
+        }  
+        
+        private IEnumerable<IValuesProvider> GetValuesProviders(XElement node, string rootPath, Dictionary<string, XmlInlineConfigurationValuesProvider> valuesGroups, string configPath)
+        {
+            if (node.Element(ValuesSourceElementName) != null)
+            {
+                yield return new XmlInlineConfigurationValuesProvider(node.Element(ValuesSourceElementName));
+            }
+
+            var externalValuesFile = node.Attribute(ValuesSourceElementName)?.Value;
+            if (string.IsNullOrWhiteSpace(externalValuesFile) == false)
+            {
+                var fileFullPath = UpdatePathWithRootPath(externalValuesFile,rootPath);
+                if (FileReader.FileExists(fileFullPath) == false)
+                {
+                    throw InvalidConfigurationFile.BecauseIncludedFileDoesNotExist(configPath, fileFullPath);
+                }
+                yield return new XmlFileConfigurationValuesProvider(fileFullPath);
+            }
+
+            var valuesGroupName = node.Attribute("valuesGroup")?.Value;
+            if (string.IsNullOrWhiteSpace(valuesGroupName) == false)
+            {
+                if (valuesGroups.TryGetValue(valuesGroupName, out var group))
+                {
+                    yield return group;
+                }
+                else
+                {
+                    throw InvalidConfigurationFile.BecauseUnknowValuesGroup(configPath, valuesGroupName);
+                }
+            }
         }
 
         private static string UpdatePathWithRootPath(string path, string rootPath)

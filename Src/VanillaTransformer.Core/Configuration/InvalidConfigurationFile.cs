@@ -17,6 +17,11 @@ namespace VanillaTransformer.Core.Configuration
         {
             return new InvalidConfigurationFile(filePath, "One of the transformations has missing pattern definition");
         }
+        
+        public static InvalidConfigurationFile BecauseMissingGroupName(string filePath)
+        {
+            return new InvalidConfigurationFile(filePath, "All 'valuesGroup' should have a non-empty 'Name' attribute");
+        }
 
         public static InvalidConfigurationFile BecauseMissingRoot(string filePath)
         {
@@ -31,6 +36,16 @@ namespace VanillaTransformer.Core.Configuration
         public static Exception BecauseDuplicatedPostTransformations(string filePath)
         {
             return new InvalidConfigurationFile(filePath, "Only one 'PostTransformations' element is allowed on given level");
+        }
+        
+        public static Exception BecauseIncludedFileDoesNotExist(string filePath, string expectedFilePath)
+        {
+            return new InvalidConfigurationFile(filePath, $"Included file '{expectedFilePath}' does not exist");
+        }
+        
+        public static Exception BecauseUnknowValuesGroup(string filePath, string expectedGroupName)
+        {
+            return new InvalidConfigurationFile(filePath, $"Values group '{expectedGroupName}' is not defined");
         }
     }
 }
