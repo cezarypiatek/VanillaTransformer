@@ -31,6 +31,8 @@ namespace VanillaTransformer.Core.Configuration
         private const string PostTransformationElementName = "postTransformations";
 
         private ITextFileReader fileReader;
+        private readonly string configFilePath;
+        private readonly string rootPath;
 
         public ITextFileReader FileReader
         {
@@ -45,30 +47,35 @@ namespace VanillaTransformer.Core.Configuration
             set { fileReader = value; }
         }
 
-        
-        public List<TransformConfiguration> ReadFromFile(string path, string rootPath = "")
+        public TransformConfigurationReader(string path, string rootPath = "")
         {
-            using (var str = FileReader.ReadFile(path))
+            this.configFilePath = path;
+            this.rootPath = rootPath;
+        }
+
+        public List<TransformConfiguration> ReadConfig()
+        {
+            using (var str = FileReader.ReadFile(configFilePath))
             {
                 var doc = XDocument.Load(str);
                 if (doc.Root == null)
                 {
-                    throw InvalidConfigurationFile.BecauseMissingRoot(path);
+                    throw InvalidConfigurationFile.BecauseMissingRoot(configFilePath);
                 }
 
-                var valuesGroups = ReadValuesGroups(path, doc.Root);
+                var valuesGroups = ReadValuesGroups(doc.Root);
 
-                var rootPostTransformations = GetPostTransformation(doc.Root, new List<IPostTransformation>(), path);
+                var rootPostTransformations = GetPostTransformation(doc.Root, new List<IPostTransformation>());
                 var result = doc.Root.Elements()
                     .Where(x => x.IsElementWithName(TransformationGroupElementName))
                     .Select(x =>
                     {
-                        var groupPostTransformations = GetPostTransformation(x, rootPostTransformations, path);
+                        var groupPostTransformations = GetPostTransformation(x, rootPostTransformations);
                         var pattern = x.Attribute(PatternSourceElementName)?.Value;
 
                         if (string.IsNullOrWhiteSpace(pattern))
                         {
-                            throw InvalidConfigurationFile.BecauseMissingPattern(path);
+                            throw InvalidConfigurationFile.BecauseMissingPattern(configFilePath);
                         }
 
                         var placeholderPattern = x.Attribute(PlaceholderPattern)?.Value;
@@ -77,17 +84,17 @@ namespace VanillaTransformer.Core.Configuration
                             .Where(y => y.IsElementWithName(TransformationElementName))
                             .Select(y =>
                             {
-                                var valuesProvider = CreateValuesProvider(y, rootPath, valuesGroups, path);
+                                var valuesProvider = CreateValuesProvider(y, valuesGroups);
                                 if (valuesProvider == null)
                                 {
-                                    throw InvalidConfigurationFile.BecauseMissingValuesSource(path, pattern);
+                                    throw InvalidConfigurationFile.BecauseMissingValuesSource(configFilePath, pattern);
                                 }
 
                                 var outputFilePath = y.Attribute(OutputPathElementName)?.Value;
 
                                 if (string.IsNullOrWhiteSpace(outputFilePath))
                                 {
-                                    throw InvalidConfigurationFile.BecauseMissingOutput(path, pattern);
+                                    throw InvalidConfigurationFile.BecauseMissingOutput(configFilePath, pattern);
                                 }
 
                                 return new TransformConfiguration
@@ -97,7 +104,7 @@ namespace VanillaTransformer.Core.Configuration
                                     OutputFilePath = outputFilePath,
                                     OutputArchive = y.Attribute(OutputArchiveElementName)?.Value,
                                     ValuesProvider = valuesProvider,
-                                    PostTransformations = GetPostTransformation(y, groupPostTransformations, path)
+                                    PostTransformations = GetPostTransformation(y, groupPostTransformations)
                                 };
                             }).ToList();
                         return transformations;
@@ -106,7 +113,7 @@ namespace VanillaTransformer.Core.Configuration
             }
         }
 
-        private static Dictionary<string, XmlInlineConfigurationValuesProvider> ReadValuesGroups(string path, XElement rootElement)
+        private  Dictionary<string, XmlInlineConfigurationValuesProvider> ReadValuesGroups(XElement rootElement)
         {
             return rootElement.Elements()
                 .Where(x => x.IsElementWithName(ValuesGroupElementName))
@@ -115,7 +122,7 @@ namespace VanillaTransformer.Core.Configuration
                     var groupName = x.Attribute("name")?.Value;
                     if (string.IsNullOrWhiteSpace(groupName))
                     {
-                        throw InvalidConfigurationFile.BecauseMissingGroupName(path);
+                        throw InvalidConfigurationFile.BecauseMissingGroupName(configFilePath);
                     }
 
                     var valuesProvider = new XmlInlineConfigurationValuesProvider(x);
@@ -127,10 +134,9 @@ namespace VanillaTransformer.Core.Configuration
                 }).ToDictionary(el => el.groupName, el => el.valuesProvider);
         }
 
-        private List<IPostTransformation> GetPostTransformation(XElement node,
-            List<IPostTransformation> inheritedPostTransformations, string path)
+        private List<IPostTransformation> GetPostTransformation(XElement node, List<IPostTransformation> inheritedPostTransformations)
         {
-            var configuration = GetPostTransformationsConfiguration(node, path);
+            var configuration = GetPostTransformationsConfiguration(node);
             var result = inheritedPostTransformations.ToList();
             foreach (var operation in configuration)
             {
@@ -139,7 +145,7 @@ namespace VanillaTransformer.Core.Configuration
             return result;
         }
 
-        private List<IPostTransformationsConfigurationOperation> GetPostTransformationsConfiguration(XElement node, string path)
+        private List<IPostTransformationsConfigurationOperation> GetPostTransformationsConfiguration(XElement node)
         {
             try
             {
@@ -157,13 +163,13 @@ namespace VanillaTransformer.Core.Configuration
             }
             catch (InvalidOperationException)
             {
-                throw InvalidConfigurationFile.BecauseDuplicatedPostTransformations(path);
+                throw InvalidConfigurationFile.BecauseDuplicatedPostTransformations(configFilePath);
             }
         }
 
-        private IValuesProvider CreateValuesProvider(XElement node, string rootPath, Dictionary<string, XmlInlineConfigurationValuesProvider> valuesGroups, string configPath)
+        private IValuesProvider CreateValuesProvider(XElement node, Dictionary<string, XmlInlineConfigurationValuesProvider> valuesGroups)
         {
-            var underlyingProviders = GetValuesProviders(node, rootPath, valuesGroups, configPath).ToList();
+            var underlyingProviders = GetValuesProviders(node, valuesGroups).ToList();
             if (underlyingProviders.Count > 0)
             {
                 return new CompositeValuesProvider(underlyingProviders);
@@ -171,7 +177,7 @@ namespace VanillaTransformer.Core.Configuration
             return null;
         }  
         
-        private IEnumerable<IValuesProvider> GetValuesProviders(XElement node, string rootPath, Dictionary<string, XmlInlineConfigurationValuesProvider> valuesGroups, string configPath)
+        private IEnumerable<IValuesProvider> GetValuesProviders(XElement node, Dictionary<string, XmlInlineConfigurationValuesProvider> valuesGroups)
         {
             if (node.Element(ValuesSourceElementName) != null)
             {
@@ -181,10 +187,10 @@ namespace VanillaTransformer.Core.Configuration
             var externalValuesFile = node.Attribute(ValuesSourceElementName)?.Value;
             if (string.IsNullOrWhiteSpace(externalValuesFile) == false)
             {
-                var fileFullPath = UpdatePathWithRootPath(externalValuesFile,rootPath);
+                var fileFullPath = UpdatePathWithRootPath(externalValuesFile, rootPath);
                 if (FileReader.FileExists(fileFullPath) == false)
                 {
-                    throw InvalidConfigurationFile.BecauseIncludedFileDoesNotExist(configPath, fileFullPath);
+                    throw InvalidConfigurationFile.BecauseIncludedFileDoesNotExist(configFilePath, fileFullPath);
                 }
                 yield return new XmlFileConfigurationValuesProvider(fileFullPath);
             }
@@ -198,7 +204,7 @@ namespace VanillaTransformer.Core.Configuration
                 }
                 else
                 {
-                    throw InvalidConfigurationFile.BecauseUnknowValuesGroup(configPath, valuesGroupName);
+                    throw InvalidConfigurationFile.BecauseUnknowValuesGroup(configFilePath, valuesGroupName);
                 }
             }
         }
