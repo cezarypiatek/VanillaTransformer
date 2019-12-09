@@ -19,7 +19,15 @@ namespace VanillaTransformer.Core.ValuesProviders
         {
             var result = inlineValues.Elements()
                 .Where(x => x.NodeType == XmlNodeType.Element)
-                .ToDictionary(el => el.Name.LocalName, el => el.GetInnerXmlAsText());
+                .ToDictionary(el =>
+                {
+                    var keyAttributeValue = el.Attribute("key")?.Value;
+                    if (el.Name.LocalName == "value" && string.IsNullOrWhiteSpace(keyAttributeValue) == false)
+                    {
+                        return keyAttributeValue;
+                    }
+                    return el.Name.LocalName;
+                }, el => el.GetInnerXmlAsText());
             return result;
         }
     }
