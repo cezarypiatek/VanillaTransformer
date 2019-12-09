@@ -159,6 +159,45 @@ namespace VanillaTransformer.Tests.CoreTest
         
         
         [Test]
+        public void should_be_to_use_alternative_syntax_for_values_with_key_attribute()
+        {
+            //ARRANGE
+            const string testFilePath = "test.xml";
+            var configurationReader = new TransformConfigurationReader(testFilePath)
+            {
+                FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
+                            <root>
+                                <transformationGroup pattern=""aaa.pattern.xml"">
+                                    <transformation valuesGroup=""SampleGroup"" output=""output.xml"">
+                                        <values>
+                                            <value key=""Val1"">AAA</value>
+                                            <Val3>CCC</Val3>
+                                        </values>
+                                    </transformation>
+                                </transformationGroup>
+                                <valuesGroup name=""SampleGroup"">
+                                    <value key=""Val1"">ZZZ</value>
+                                    <value key=""Val2"">BBB</value>
+                                </valuesGroup>
+                            </root>")
+            };
+            var transformConfigurations = configurationReader.ReadConfig();
+            var transformationToTest = transformConfigurations.First();
+
+            //ACT
+            var values = transformationToTest.ValuesProvider.GetValues();
+
+
+            //ASSERT
+            Assert.IsNotNull(values);
+            Assert.AreEqual(3, values.Count);
+            Assert.AreEqual(values["Val1"], "AAA");
+            Assert.AreEqual(values["Val2"], "BBB");
+            Assert.AreEqual(values["Val3"], "CCC");
+        }  
+        
+        
+        [Test]
         public void should_be_able_to_read_post_transformation_from_root_node_configuration()
         {
             //ARRANGE
