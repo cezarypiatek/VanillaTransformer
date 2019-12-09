@@ -47,8 +47,8 @@ namespace VanillaTransformer.Core
         {
             if (IsTransformConfigurationFileSpecified())
             {
-                var configurationReader = new TransformConfigurationReader();
-                return configurationReader.ReadFromFile(_inputParameters.TransformConfiguration, _inputParameters.ProjectRootPath);
+                var configurationReader = new TransformConfigurationReader(_inputParameters.TransformConfiguration, _inputParameters.ProjectRootPath);
+                return configurationReader.ReadConfig();
             }
 
             return new List<TransformConfiguration>

@@ -13,7 +13,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -24,7 +24,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
             
             //ACT
-            var result = configurationReader.ReadFromFile(testFilePath);
+            var result = configurationReader.ReadConfig();
 
             //ASSERT
             Assert.IsNotNull(result);
@@ -40,7 +40,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -51,7 +51,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
             
             //ACT
-            var result = configurationReader.ReadFromFile(testFilePath);
+            var result = configurationReader.ReadConfig();
 
             //ASSERT
             Assert.IsNotNull(result);
@@ -67,7 +67,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -79,7 +79,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
 
             //ACT
-            var result = configurationReader.ReadFromFile(testFilePath);
+            var result = configurationReader.ReadConfig();
 
             //ASSERT
             Assert.IsNotNull(result);
@@ -93,7 +93,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -106,7 +106,7 @@ namespace VanillaTransformer.Tests.CoreTest
                                 </transformationGroup>
                             </root>")
             };
-            var transformConfigurations = configurationReader.ReadFromFile(testFilePath);
+            var transformConfigurations = configurationReader.ReadConfig();
             var transformationToTest = transformConfigurations.First();
 
             //ACT
@@ -117,6 +117,83 @@ namespace VanillaTransformer.Tests.CoreTest
             Assert.IsNotNull(values);
             Assert.IsTrue(values.ContainsKey("Val1"));
             Assert.AreEqual(values["Val1"], "AAA");
+        }
+        
+        [Test]
+        public void should_be_able_to_enrich_inline_values_with_values_group()
+        {
+            //ARRANGE
+            const string testFilePath = "test.xml";
+            var configurationReader = new TransformConfigurationReader(testFilePath)
+            {
+                FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
+                            <root>
+                                <transformationGroup pattern=""aaa.pattern.xml"">
+                                    <transformation valuesGroup=""SampleGroup"" output=""output.xml"">
+                                        <values>
+                                            <Val1>AAA</Val1>
+                                            <Val3>CCC</Val3>
+                                        </values>
+                                    </transformation>
+                                </transformationGroup>
+                                <valuesGroup name=""SampleGroup"">
+                                    <Val1>ZZZ</Val1>
+                                    <Val2>BBB</Val2>
+                                </valuesGroup>
+                            </root>")
+            };
+            var transformConfigurations = configurationReader.ReadConfig();
+            var transformationToTest = transformConfigurations.First();
+
+            //ACT
+            var values = transformationToTest.ValuesProvider.GetValues();
+
+
+            //ASSERT
+            Assert.IsNotNull(values);
+            Assert.AreEqual(3, values.Count);
+            Assert.AreEqual(values["Val1"], "AAA");
+            Assert.AreEqual(values["Val2"], "BBB");
+            Assert.AreEqual(values["Val3"], "CCC");
+        }  
+        
+        
+        [Test]
+        public void should_be_to_use_alternative_syntax_for_values_with_key_attribute()
+        {
+            //ARRANGE
+            const string testFilePath = "test.xml";
+            var configurationReader = new TransformConfigurationReader(testFilePath)
+            {
+                FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
+                            <root>
+                                <transformationGroup pattern=""aaa.pattern.xml"">
+                                    <transformation valuesGroup=""SampleGroup"" output=""output.xml"">
+                                        <values>
+                                            <value key=""Val1"">AAA</value>
+                                            <Val3>CCC</Val3>
+                                        </values>
+                                    </transformation>
+                                </transformationGroup>
+                                <valuesGroup name=""SampleGroup"">
+                                    <value key=""Val1"">ZZZ</value>
+                                    <value key=""Val2"">BBB</value>
+                                </valuesGroup>
+                            </root>")
+            };
+            var transformConfigurations = configurationReader.ReadConfig();
+            var transformationToTest = transformConfigurations.First();
+
+            //ACT
+            var values = transformationToTest.ValuesProvider.GetValues();
+
+
+            //ASSERT
+            Assert.IsNotNull(values);
+            Assert.AreEqual(3, values.Count);
+            Assert.AreEqual(values["Val1"], "AAA");
+            Assert.AreEqual(values["Val2"], "BBB");
+            Assert.AreEqual(values["Val3"], "CCC");
         }  
         
         
@@ -125,7 +202,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -139,7 +216,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
 
             //ACT
-            var transformConfigurations = configurationReader.ReadFromFile(testFilePath);
+            var transformConfigurations = configurationReader.ReadConfig();
 
 
             //ASSERT
@@ -155,7 +232,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -169,7 +246,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
 
             //ACT
-            var transformConfigurations = configurationReader.ReadFromFile(testFilePath);
+            var transformConfigurations = configurationReader.ReadConfig();
 
 
             //ASSERT
@@ -184,7 +261,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -199,7 +276,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
 
             //ACT
-            var transformConfigurations = configurationReader.ReadFromFile(testFilePath);
+            var transformConfigurations = configurationReader.ReadConfig();
 
 
             //ASSERT
@@ -214,7 +291,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -232,7 +309,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
 
             //ACT
-            var transformConfigurations = configurationReader.ReadFromFile(testFilePath);
+            var transformConfigurations = configurationReader.ReadConfig();
 
 
             //ASSERT
@@ -248,7 +325,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -267,7 +344,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
 
             //ACT
-            var transformConfigurations = configurationReader.ReadFromFile(testFilePath);
+            var transformConfigurations = configurationReader.ReadConfig();
 
 
             //ASSERT
@@ -282,7 +359,7 @@ namespace VanillaTransformer.Tests.CoreTest
         {
             //ARRANGE
             const string testFilePath = "test.xml";
-            var configurationReader = new TransformConfigurationReader
+            var configurationReader = new TransformConfigurationReader(testFilePath)
             {
                 FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, @"
                             <root>
@@ -301,7 +378,7 @@ namespace VanillaTransformer.Tests.CoreTest
             };
 
             //ACT
-            var transformConfigurations = configurationReader.ReadFromFile(testFilePath);
+            var transformConfigurations = configurationReader.ReadConfig();
 
 
             //ASSERT
