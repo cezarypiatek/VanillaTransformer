@@ -30,32 +30,20 @@ namespace VanillaTransformer.Core.Configuration
 
         private const string PostTransformationElementName = "postTransformations";
 
-        private ITextFileReader fileReader;
+        private readonly ITextFileReader fileReader;
         private readonly string configFilePath;
         private readonly string rootPath;
 
-        public ITextFileReader FileReader
-        {
-            get
-            {
-                if (fileReader == null)
-                {
-                    fileReader = new SimpleTextFileReader();
-                }
-                return fileReader;
-            }
-            set { fileReader = value; }
-        }
-
-        public TransformConfigurationReader(string path, string rootPath = "")
+        public TransformConfigurationReader(ITextFileReader textFileReader, string path, string rootPath = "")
         {
             this.configFilePath = path;
             this.rootPath = rootPath;
+            this.fileReader = textFileReader;
         }
 
         public List<TransformConfiguration> ReadConfig()
         {
-            using (var str = FileReader.ReadFile(configFilePath))
+            using (var str = fileReader.ReadFile(configFilePath))
             {
                 var doc = XDocument.Load(str);
                 if (doc.Root == null)
@@ -188,7 +176,7 @@ namespace VanillaTransformer.Core.Configuration
             if (string.IsNullOrWhiteSpace(externalValuesFile) == false)
             {
                 var fileFullPath = UpdatePathWithRootPath(externalValuesFile, rootPath);
-                if (FileReader.FileExists(fileFullPath) == false)
+                if (fileReader.FileExists(fileFullPath) == false)
                 {
                     throw InvalidConfigurationFile.BecauseIncludedFileDoesNotExist(configFilePath, fileFullPath);
                 }
