@@ -22,11 +22,12 @@ namespace VanillaTransformer.Core.ValuesProviders
                 .ToDictionary(el =>
                 {
                     var keyAttributeValue = el.Attribute("key")?.Value;
-                    if (el.Name.LocalName == "value" && string.IsNullOrWhiteSpace(keyAttributeValue) == false)
+                    var valueName = el.Name.LocalName;
+                    if ((valueName == "add" || valueName == "value") && string.IsNullOrWhiteSpace(keyAttributeValue) == false)
                     {
                         return keyAttributeValue;
                     }
-                    return el.Name.LocalName;
+                    return valueName;
                 }, el => el.GetInnerXmlAsText());
             return result;
         }

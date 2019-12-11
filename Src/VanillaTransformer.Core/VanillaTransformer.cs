@@ -48,8 +48,7 @@ namespace VanillaTransformer.Core
         {
             if (IsTransformConfigurationFileSpecified())
             {
-                var xmlTextFileReader = new XmlTextFileReader(new SimpleTextFileReader());
-                var configurationReader = new VanillaTransformConfigurationReader(new FileSystem(),  xmlTextFileReader, _inputParameters.ProjectRootPath);
+                var configurationReader = CreateTransformConfigurationReader();
                 try
                 {
                     return configurationReader.ReadConfig(_inputParameters.TransformConfiguration);
@@ -70,6 +69,19 @@ namespace VanillaTransformer.Core
                     ValuesProvider = GetValuesProvider()
                 }
             };
+        }
+
+        private ITransformConfigurationReader CreateTransformConfigurationReader()
+        {
+            var xmlTextFileReader = new XmlTextFileReader(new SimpleTextFileReader());
+
+            switch (_inputParameters.TransformConfigurationFormat)
+            {
+                case "deployment":
+                    return new DeploymentTransformConfigurationReader(xmlTextFileReader);
+                default:
+                    return new VanillaTransformConfigurationReader(new FileSystem(), xmlTextFileReader, _inputParameters.ProjectRootPath);
+            }
         }
 
         private bool IsTransformConfigurationFileSpecified()

@@ -4,7 +4,7 @@ namespace VanillaTransformer.Core.Configuration
 {
     public class InvalidConfigurationException : Exception
     {
-        private InvalidConfigurationException(string message) 
+        public InvalidConfigurationException(string message) 
             : base(message)
         {
         }
