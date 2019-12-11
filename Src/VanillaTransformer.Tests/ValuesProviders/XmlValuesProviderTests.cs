@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using VanillaTransformer.Core.Configuration;
 using VanillaTransformer.Core.ValuesProviders;
 
 namespace VanillaTransformer.Tests.ValuesProviders
@@ -12,9 +13,9 @@ namespace VanillaTransformer.Tests.ValuesProviders
         {
             //ARRANGE
             const string testFileName = "test.xml";
-            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName);
-            xmlValueProvider.FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root><Var1>Val1</Var1></root>");
-
+            var textFileReaderMock = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root><Var1>Val1</Var1></root>");
+            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName, new XmlTextFileReader(textFileReaderMock));
+            
             //ACT
             var result = xmlValueProvider.GetValues();
 
@@ -30,8 +31,9 @@ namespace VanillaTransformer.Tests.ValuesProviders
         {
             //ARRANGE
             const string testFileName = "test.xml";
-            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName);
-            xmlValueProvider.FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root><Var1>Val1</Var1></root>");
+            var textFileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root><Var1>Val1</Var1></root>");
+            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName, new XmlTextFileReader(textFileReader));
+
             
             //ACT
             var result = xmlValueProvider.GetValues();
@@ -46,9 +48,9 @@ namespace VanillaTransformer.Tests.ValuesProviders
         {
              //ARRANGE
             const string testFileName = "test.xml";
-            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName);
-            xmlValueProvider.FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root><Var1><InsideXml>Sample</InsideXml></Var1></root>");
-            
+            var textFileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root><Var1><InsideXml>Sample</InsideXml></Var1></root>");
+            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName, new XmlTextFileReader(textFileReader));
+
             //ACT
             var result = xmlValueProvider.GetValues();
 
@@ -64,14 +66,14 @@ namespace VanillaTransformer.Tests.ValuesProviders
         {
              //ARRANGE
             const string testFileName = "test.xml";
-            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName);
-            xmlValueProvider.FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName,
-@"<root>
+            var textFileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root>
     <Var1>
         <InsideXml>Sample</InsideXml>
         <InsideXml>Sample2</InsideXml>
     </Var1>
 </root>");
+            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName, new XmlTextFileReader(textFileReader));
+
             
             //ACT
             var result = xmlValueProvider.GetValues();
@@ -91,8 +93,8 @@ namespace VanillaTransformer.Tests.ValuesProviders
         {
             //ARRANGE
             const string testFileName = "test.xml";
-            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName);
-            xmlValueProvider.FileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root><Var1>attribute=""val""</Var1></root>");
+            var textFileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFileName, @"<root><Var1>attribute=""val""</Var1></root>");
+            var xmlValueProvider = new XmlFileConfigurationValuesProvider(testFileName, new XmlTextFileReader(textFileReader));
 
             //ACT
             var result = xmlValueProvider.GetValues();

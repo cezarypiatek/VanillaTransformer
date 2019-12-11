@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Moq;
 using NUnit.Framework;
 using VanillaTransformer.Core.Configuration;
 using VanillaTransformer.Tests.ValuesProviders;
@@ -8,18 +9,19 @@ namespace VanillaTransformer.Tests.CoreTest
     [TestFixture]
     public class TransformConfigurationReaderTests
     {
-        private static TransformConfigurationReader CreateConfigReader(string config)
+        private static VanillaTransformConfigurationReader CreateConfigReader(string path, string config)
         {
-            const string testFilePath = "test.xml";
-            var textFileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(testFilePath, config);
-            return  new TransformConfigurationReader(textFileReader, testFilePath);
+            var textFileReader = TextFileReaderTestsHelpers.GetTextFileReaderMock(path, config);
+            var fileSystemMock = new Mock<IFileSystem>();
+            fileSystemMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(true);
+            return  new VanillaTransformConfigurationReader(fileSystemMock.Object,  new XmlTextFileReader(textFileReader));
         }
 
         [Test]
         public void should_be_able_to_read_transformations_from_file()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <transformationGroup pattern=""aaa.pattern.xml"">
                                     <transformation values=""aaa.values.xml"" output=""output.xml"" />
@@ -27,7 +29,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
 
             //ACT
-            var result = configurationReader.ReadConfig();
+            var result = configurationReader.ReadConfig("test.xml");
 
             //ASSERT
             Assert.IsNotNull(result);
@@ -42,7 +44,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_read_transformations_from_file_with_placeholder_pattern()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <transformationGroup pattern=""aaa.pattern.xml"" placeholderPattern=""#[KEY]"">
                                     <transformation values=""aaa.values.xml"" output=""output.xml"" />
@@ -50,7 +52,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
             
             //ACT
-            var result = configurationReader.ReadConfig();
+            var result = configurationReader.ReadConfig("test.xml");
 
             //ASSERT
             Assert.IsNotNull(result);
@@ -65,7 +67,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_read_many_transformation_for_single_pattern()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <transformationGroup pattern=""aaa.pattern.xml"">
                                     <transformation values=""aaa.values.xml"" output=""output.xml"" />
@@ -74,7 +76,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
 
             //ACT
-            var result = configurationReader.ReadConfig();
+            var result = configurationReader.ReadConfig("test.xml");
 
             //ASSERT
             Assert.IsNotNull(result);
@@ -87,7 +89,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_read_inline_values_from_transformation_configuration()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <transformationGroup pattern=""aaa.pattern.xml"">
                                     <transformation output=""output.xml"">
@@ -97,7 +99,7 @@ namespace VanillaTransformer.Tests.CoreTest
                                     </transformation>
                                 </transformationGroup>
                             </root>");
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
             var transformationToTest = transformConfigurations.First();
 
             //ACT
@@ -114,7 +116,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_enrich_inline_values_with_values_group()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <transformationGroup pattern=""aaa.pattern.xml"">
                                     <transformation valuesGroup=""SampleGroup"" output=""output.xml"">
@@ -129,7 +131,7 @@ namespace VanillaTransformer.Tests.CoreTest
                                     <Val2>BBB</Val2>
                                 </valuesGroup>
                             </root>");
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
             var transformationToTest = transformConfigurations.First();
 
             //ACT
@@ -149,7 +151,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_to_use_alternative_syntax_for_values_with_key_attribute()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <transformationGroup pattern=""aaa.pattern.xml"">
                                     <transformation valuesGroup=""SampleGroup"" output=""output.xml"">
@@ -164,7 +166,7 @@ namespace VanillaTransformer.Tests.CoreTest
                                     <value key=""Val2"">BBB</value>
                                 </valuesGroup>
                             </root>");
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
             var transformationToTest = transformConfigurations.First();
 
             //ACT
@@ -184,7 +186,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_read_post_transformation_from_root_node_configuration()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <postTransformations>
                                     <add name=""ReFormatXML"" />
@@ -195,7 +197,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
 
             //ACT
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
 
 
             //ASSERT
@@ -210,7 +212,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_read_post_transformation_from_group_node_configuration()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <transformationGroup pattern=""aaa.pattern.xml"">
                                      <postTransformations>
@@ -221,7 +223,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
 
             //ACT
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
 
 
             //ASSERT
@@ -235,7 +237,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_read_post_transformation_from_transformation_node_configuration()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <transformationGroup pattern=""aaa.pattern.xml"">
                                     <transformation values=""aaa.values.xml"" output=""output.xml"">
@@ -247,7 +249,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
 
             //ACT
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
 
 
             //ASSERT
@@ -261,7 +263,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_extend_post_transformation_on_lower_level_of_configuration()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <postTransformations>
                                     <add name=""StripXMLComments"" />
@@ -276,7 +278,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
 
             //ACT
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
 
 
             //ASSERT
@@ -291,7 +293,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_supress_post_transformation_on_lower_level_of_configuration()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <postTransformations>
                                     <add name=""StripXMLComments"" />
@@ -307,7 +309,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
 
             //ACT
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
 
 
             //ASSERT
@@ -321,7 +323,7 @@ namespace VanillaTransformer.Tests.CoreTest
         public void should_be_able_to_suppress_all_post_transformation_on_lower_level_of_configuration()
         {
             //ARRANGE
-            var configurationReader = CreateConfigReader(@"
+            var configurationReader = CreateConfigReader("test.xml", @"
                             <root>
                                 <postTransformations>
                                     <add name=""StripXMLComments"" />
@@ -337,7 +339,7 @@ namespace VanillaTransformer.Tests.CoreTest
                             </root>");
 
             //ACT
-            var transformConfigurations = configurationReader.ReadConfig();
+            var transformConfigurations = configurationReader.ReadConfig("test.xml");
 
 
             //ASSERT

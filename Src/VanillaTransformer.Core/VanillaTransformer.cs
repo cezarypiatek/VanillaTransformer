@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using VanillaTransformer.Core.Configuration;
 using VanillaTransformer.Core.OutputWriters;
@@ -47,8 +48,16 @@ namespace VanillaTransformer.Core
         {
             if (IsTransformConfigurationFileSpecified())
             {
-                var configurationReader = new TransformConfigurationReader(new SimpleTextFileReader(), _inputParameters.TransformConfiguration, _inputParameters.ProjectRootPath);
-                return configurationReader.ReadConfig();
+                var xmlTextFileReader = new XmlTextFileReader(new SimpleTextFileReader());
+                var configurationReader = new VanillaTransformConfigurationReader(new FileSystem(),  xmlTextFileReader, _inputParameters.ProjectRootPath);
+                try
+                {
+                    return configurationReader.ReadConfig(_inputParameters.TransformConfiguration);
+                }
+                catch (Exception exception)
+                {
+                    throw new InvalidConfigurationFIleException(_inputParameters.TransformConfiguration, exception);
+                }
             }
 
             return new List<TransformConfiguration>

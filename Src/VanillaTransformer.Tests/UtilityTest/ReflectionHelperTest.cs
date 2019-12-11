@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using VanillaTransformer.Core;
+using VanillaTransformer.Core.Configuration;
 using VanillaTransformer.Core.Transformers;
 using VanillaTransformer.Core.Utility;
 using VanillaTransformer.Core.ValuesProviders;
@@ -32,7 +33,7 @@ namespace VanillaTransformer.Tests.UtilityTest
             var className = typeof(XmlFileConfigurationValuesProvider).Name;
 
             //ACT
-            var result = ReflectionHelper.GetInstanceOf<IValuesProvider>(className,"text.xml");
+            var result = ReflectionHelper.GetInstanceOf<IValuesProvider>(className,"text.xml", new XmlTextFileReader(new SimpleTextFileReader()));
 
             //ASSERT
             Assert.IsNotNull(result);
