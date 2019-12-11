@@ -247,7 +247,7 @@ Currently available post-transformations:
 VannilaTransformer ships also in the form of console app which can be used directly from the command line.  You can download it from the [Releases page](https://github.com/cezarypiatek/VanillaTransformer/releases) or install as a dotnet CLI global tools:
 
 ```
-dotnet tool install --global VanillaTransformer.Console
+dotnet tool install --global dotnet-configtransform
 ```
 
 
