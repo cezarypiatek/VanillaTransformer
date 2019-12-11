@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using VanillaTransformer.Core.Configuration;
 using VanillaTransformer.Core.OutputWriters;
@@ -47,8 +48,15 @@ namespace VanillaTransformer.Core
         {
             if (IsTransformConfigurationFileSpecified())
             {
-                var configurationReader = new TransformConfigurationReader(_inputParameters.TransformConfiguration, _inputParameters.ProjectRootPath);
-                return configurationReader.ReadConfig();
+                var configurationReader = CreateTransformConfigurationReader();
+                try
+                {
+                    return configurationReader.ReadConfig(_inputParameters.TransformConfiguration);
+                }
+                catch (Exception exception)
+                {
+                    throw new InvalidConfigurationFIleException(_inputParameters.TransformConfiguration, exception);
+                }
             }
 
             return new List<TransformConfiguration>
@@ -61,6 +69,19 @@ namespace VanillaTransformer.Core
                     ValuesProvider = GetValuesProvider()
                 }
             };
+        }
+
+        private ITransformConfigurationReader CreateTransformConfigurationReader()
+        {
+            var xmlTextFileReader = new XmlTextFileReader(new SimpleTextFileReader());
+
+            switch (_inputParameters.TransformConfigurationFormat)
+            {
+                case "deployment":
+                    return new DeploymentTransformConfigurationReader(xmlTextFileReader);
+                default:
+                    return new VanillaTransformConfigurationReader(new FileSystem(), xmlTextFileReader, _inputParameters.ProjectRootPath);
+            }
         }
 
         private bool IsTransformConfigurationFileSpecified()

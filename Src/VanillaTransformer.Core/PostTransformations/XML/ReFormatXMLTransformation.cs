@@ -5,7 +5,8 @@ namespace VanillaTransformer.Core.PostTransformations.XML
 {
     public class ReFormatXMLTransformation:IPostTransformation
     {
-        public string Name { get { return "ReFormatXML"; } }
+        public string Name => "ReFormatXML";
+
         public string Execute(string configContent)
         {
             var settings = new XmlWriterSettings()

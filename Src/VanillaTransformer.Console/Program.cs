@@ -42,6 +42,11 @@ namespace VanillaTransformer.Console
                 .As('t', "TransformConfiguration")
                 .WithDescription("Path to a file with transform configuration")
                 .Required();
+
+            parser.Setup(arg => arg.TransformConfigurationFormat)
+                .As('f', "ConfigurationFormat")
+                .WithDescription("Format of the transform configuration file. Available options: 'deployment', 'default'");
+
             SetupCommonOptions(parser);
             return parser;
         }

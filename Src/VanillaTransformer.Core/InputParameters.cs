@@ -39,6 +39,11 @@ namespace VanillaTransformer.Core
         public string TransformConfiguration { get; set; }
 
         /// <summary>
+        /// Format of the transform configuration file. Available: deployment, default.
+        /// </summary>
+        public string TransformConfigurationFormat { get; set; }
+
+        /// <summary>
         /// If not set, the path of the executable will be taken
         /// </summary>
         public string ProjectRootPath { get; set; }
