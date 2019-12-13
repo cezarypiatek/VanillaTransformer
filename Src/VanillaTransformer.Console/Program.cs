@@ -22,7 +22,7 @@ namespace VanillaTransformer.Console
             }
             catch (Exception e)
             {
-                System.Console.Error.WriteLine($"ERROR: {e.Message}");
+                System.Console.Error.WriteLine($"ERROR: {e}");
             }
         }
 

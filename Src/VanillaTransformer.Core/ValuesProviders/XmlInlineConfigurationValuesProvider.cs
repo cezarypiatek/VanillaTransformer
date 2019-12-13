@@ -17,6 +17,11 @@ namespace VanillaTransformer.Core.ValuesProviders
 
         public IDictionary<string, string> GetValues()
         {
+            if (inlineValues == null)
+            {
+                return new Dictionary<string, string>();
+            }
+
             var result = inlineValues.Elements()
                 .Where(x => x.NodeType == XmlNodeType.Element)
                 .ToDictionary(el =>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Fclp;
 using Fclp.Internals;
 using VanillaTransformer.Core;
@@ -27,7 +28,7 @@ namespace VanillaTransformer.Console
             {
                 return;
             }
-            System.Console.WriteLine($"=============== VanillaTransformer HELP ===============");
+            System.Console.WriteLine($"=============== VanillaTransformer {Assembly.GetEntryAssembly().GetName().Version} HELP ===============");
             for (int i = 0; i < this.parsers.Count; i++)
             {
                 if (this.parsers[i] is var parser && parser.HelpOption is HelpCommandLineOption help)

@@ -57,7 +57,7 @@ namespace VanillaTransformer.Core.Configuration
                                 var machineValuesProvider = GetValueProvider(machineNode);
                                 if (ShouldDeployTo(appName, machineNode) == false)
                                 {
-                                    break;
+                                    continue;
                                 }
                                 var outputFilePath = outputPathPattern.Replace("{app}", appName)
                                     .Replace("{environment}", envName)
