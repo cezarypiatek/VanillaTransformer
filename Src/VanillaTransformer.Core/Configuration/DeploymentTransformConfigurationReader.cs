@@ -50,8 +50,25 @@ namespace VanillaTransformer.Core.Configuration
                         {
                             var envName = environmentsNode.GetRequiredAttribute("name");
                             var envValuesProvider = GetValueProvider(environmentsNode);
-                            var machineNodeContainer = environmentsNode.GetRequiredElement("machines");
-                            foreach (var machineNode in machineNodeContainer.Elements("machine"))
+                            var machineNodeContainer = environmentsNode.Element("machines");
+
+                            if (machineNodeContainer == null)
+                            {
+                                var outputFilePath = outputPathPattern.Replace("{app}", appName)
+                                    .Replace("{environment}", envName)
+                                    .Replace("{machine}", string.Empty)
+                                    .Replace("{template}", templateName);
+
+                                yield return new TransformConfiguration()
+                                {
+                                    OutputFilePath = Path.Combine(rootPath, outputFilePath),
+                                    PatternFilePath = Path.Combine(rootPath, patternFilePath),
+                                    PlaceholderPattern = placeholder,
+                                    ValuesProvider = envValuesProvider,
+                                    PostTransformations = CreatePostTransformations(postTransformations, templateName),
+                                };
+                            }
+                            else foreach (var machineNode in machineNodeContainer.Elements("machine"))
                             {
                                 var machineName = machineNode.GetRequiredAttribute("name");
                                 var machineValuesProvider = GetValueProvider(machineNode);
