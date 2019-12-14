@@ -31,8 +31,13 @@ namespace VanillaTransformer.Core
                 }
                 else
                 {
-                    errorPrinter("{description}  [ERROR]");
-                    errorPrinter(transformationResult.Exception.Message);
+                    errorPrinter($"{description}  [ERROR]");
+                    var exception = transformationResult.Exception;
+                    while (exception != null)
+                    {
+                        errorPrinter($"\tCause by: [{exception.GetType().FullName}] {exception.Message}");
+                        exception = exception.InnerException;
+                    }
                 }
             }
         }
