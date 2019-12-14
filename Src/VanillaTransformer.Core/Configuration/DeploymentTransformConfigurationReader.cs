@@ -21,16 +21,19 @@ namespace VanillaTransformer.Core.Configuration
         {
             var rootPath = Path.GetDirectoryName(Path.GetFullPath(path));
             var doc = xmlTextFileReader.Read(path);
-            var appNodes = doc.GetChildren("apps","app", isRequired:true);
-            var environmentsNodes = doc.GetChildren("environments","environment", isRequired:true);
-            var transformationsNodes = doc.GetChildren("transformations","transformation", isRequired:true);
-            var postTransformations = doc.GetChildren("postTransformations","postTransformation", isRequired:false);
-            return GetTransformations(appNodes, environmentsNodes, transformationsNodes, postTransformations, rootPath).ToList();
+            var appNodes = doc.GetChildren("apps", "app", isRequired: true);
+            var environmentsNodes = doc.GetChildren("environments", "environment", isRequired: true);
+            var transformationsNodes = doc.GetChildren("transformations", "transformation", isRequired: true);
+            var postTransformations = doc.GetChildren("postTransformations", "postTransformation", isRequired: false);
+            return GetTransformations(rootPath, appNodes, environmentsNodes, transformationsNodes, postTransformations).ToList();
         }
 
-        private IEnumerable<TransformConfiguration> GetTransformations(IReadOnlyList<XElement> appNodes,
-            IReadOnlyList<XElement> environmentsNodes, IReadOnlyList<XElement> transformationsNodes,
-            IReadOnlyList<XElement> postTransformations, string rootPath)
+        private IEnumerable<TransformConfiguration> GetTransformations(
+            string rootPath,
+            IReadOnlyList<XElement> appNodes,
+            IReadOnlyList<XElement> environmentsNodes,
+            IReadOnlyList<XElement> transformationsNodes,
+            IReadOnlyList<XElement> postTransformations)
         {
             foreach (var transformationsNode in transformationsNodes)
             {
@@ -46,18 +49,20 @@ namespace VanillaTransformer.Core.Configuration
                         var patternFilePath = templateNode.GetRequiredAttribute("pattern");
                         var placeholder = templateNode.Attribute("placeholder")?.Value;
 
-                        foreach (var environmentsNode in environmentsNodes)
+                        foreach (var environmentNode in environmentsNodes)
                         {
-                            var envName = environmentsNode.GetRequiredAttribute("name");
-                            var envValuesProvider = GetValueProvider(environmentsNode);
-                            var machineNodeContainer = environmentsNode.Element("machines");
+                            if (ShouldDeployTo(appName, environmentNode) == false)
+                            {
+                                continue;
+                            }
+
+                            var envName = environmentNode.GetRequiredAttribute("name");
+                            var envValuesProvider = GetValueProvider(environmentNode);
+                            var machineNodeContainer = environmentNode.Element("machines");
 
                             if (machineNodeContainer == null)
                             {
-                                var outputFilePath = outputPathPattern.Replace("{app}", appName)
-                                    .Replace("{environment}", envName)
-                                    .Replace("{machine}", string.Empty)
-                                    .Replace("{template}", templateName);
+                                var outputFilePath = CreateOutputFilePath(outputPathPattern, appName, envName, string.Empty, templateName);
 
                                 yield return new TransformConfiguration()
                                 {
@@ -70,24 +75,22 @@ namespace VanillaTransformer.Core.Configuration
                             }
                             else foreach (var machineNode in machineNodeContainer.Elements("machine"))
                             {
-                                var machineName = machineNode.GetRequiredAttribute("name");
-                                var machineValuesProvider = GetValueProvider(machineNode);
                                 if (ShouldDeployTo(appName, machineNode) == false)
                                 {
                                     continue;
                                 }
-                                var outputFilePath = outputPathPattern.Replace("{app}", appName)
-                                    .Replace("{environment}", envName)
-                                    .Replace("{machine}", machineName)
-                                    .Replace("{template}", templateName);
 
-                                
+                                var machineName = machineNode.GetRequiredAttribute("name");
+                                var machineSpecificValuesProvider = GetValueProvider(machineNode);
+                                var valuesProvider = new CompositeValuesProvider(new[] { machineSpecificValuesProvider, envValuesProvider });
+                                var outputFilePath = CreateOutputFilePath(outputPathPattern, appName, envName, machineName, templateName);
+
                                 yield return new TransformConfiguration()
                                 {
                                     OutputFilePath = Path.Combine(rootPath, outputFilePath),
                                     PatternFilePath = Path.Combine(rootPath, patternFilePath),
                                     PlaceholderPattern = placeholder,
-                                    ValuesProvider = new CompositeValuesProvider(new[]{machineValuesProvider, envValuesProvider}),
+                                    ValuesProvider = valuesProvider,
                                     PostTransformations = CreatePostTransformations(postTransformations, templateName),
                                 };
                             }
@@ -97,9 +100,17 @@ namespace VanillaTransformer.Core.Configuration
             }
         }
 
-        private static bool ShouldDeployTo(string appName, XElement machineNode)
+        private static string CreateOutputFilePath(string outputPathPattern, string appName, string envName, string machineName, string templateName)
         {
-            var availableForApps = machineNode.Attribute("apps")?.Value.Split(';');
+            return outputPathPattern.Replace("{app}", appName)
+                .Replace("{environment}", envName)
+                .Replace("{machine}", machineName)
+                .Replace("{template}", templateName);
+        }
+
+        private static bool ShouldDeployTo(string appName, XElement containerNode)
+        {
+            var availableForApps = containerNode.Attribute("apps")?.Value.Split(';');
             if (availableForApps == null || availableForApps.Length == 0)
             {
                 return true;
