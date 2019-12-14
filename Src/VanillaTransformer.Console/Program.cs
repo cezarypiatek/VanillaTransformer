@@ -7,7 +7,7 @@ namespace VanillaTransformer.Console
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             try
             {
@@ -17,13 +17,23 @@ namespace VanillaTransformer.Console
                 if (transformerParameters != null)
                 {
                     var vanillaTransformer = new Core.VanillaTransformer(transformerParameters);
-                    vanillaTransformer.LaunchTransformations();
+                    var results = vanillaTransformer.LaunchTransformations();
+                    results.PrintDescription(System.Console.WriteLine, System.Console.Error.WriteLine);
+
+                    if (results.Success)
+                    {
+                        return 0;
+                    }
+
+                    return -1;
                 }
             }
             catch (Exception e)
             {
                 System.Console.Error.WriteLine($"ERROR: {e}");
+                return -1;
             }
+            return 0;
         }
 
         private static MultiGroupParser SetupParser()
