@@ -38,6 +38,9 @@ namespace VanillaTransformer.Core.Configuration
             foreach (var transformationsNode in transformationsNodes)
             {
                 var outputPathPattern = transformationsNode.GetRequiredAttribute("output");
+                var archivePathPattern = transformationsNode.Attribute("archive")?.Value;
+                var pathBuilder = new PathBuilder(rootPath, outputPathPattern, archivePathPattern);
+
                 foreach (var appNode in appNodes)
                 {
                     var appName = appNode.GetRequiredAttribute("name");
@@ -62,11 +65,12 @@ namespace VanillaTransformer.Core.Configuration
 
                             if (machineNodeContainer == null)
                             {
-                                var outputFilePath = CreateOutputFilePath(outputPathPattern, appName, envName, string.Empty, templateName);
+                                var (outputFilePath, outputArchivePath) = pathBuilder.CreateOutputPaths(appName, envName, string.Empty, templateName);
 
                                 yield return new TransformConfiguration()
                                 {
-                                    OutputFilePath = Path.Combine(rootPath, outputFilePath),
+                                    OutputFilePath = outputFilePath,
+                                    OutputArchive = outputArchivePath,
                                     PatternFilePath = Path.Combine(rootPath, patternFilePath),
                                     PlaceholderPattern = placeholder,
                                     ValuesProvider = envValuesProvider,
@@ -83,11 +87,12 @@ namespace VanillaTransformer.Core.Configuration
                                 var machineName = machineNode.GetRequiredAttribute("name");
                                 var machineSpecificValuesProvider = GetValueProvider(machineNode);
                                 var valuesProvider = new CompositeValuesProvider(new[] { machineSpecificValuesProvider, envValuesProvider });
-                                var outputFilePath = CreateOutputFilePath(outputPathPattern, appName, envName, machineName, templateName);
+                                var (outputFilePath, outputArchivePath) = pathBuilder.CreateOutputPaths(appName, envName, machineName, templateName);
 
                                 yield return new TransformConfiguration()
                                 {
-                                    OutputFilePath = Path.Combine(rootPath, outputFilePath),
+                                    OutputFilePath = outputFilePath,
+                                    OutputArchive = outputArchivePath,
                                     PatternFilePath = Path.Combine(rootPath, patternFilePath),
                                     PlaceholderPattern = placeholder,
                                     ValuesProvider = valuesProvider,
@@ -98,14 +103,6 @@ namespace VanillaTransformer.Core.Configuration
                     }
                 }
             }
-        }
-
-        private static string CreateOutputFilePath(string outputPathPattern, string appName, string envName, string machineName, string templateName)
-        {
-            return outputPathPattern.Replace("{app}", appName)
-                .Replace("{environment}", envName)
-                .Replace("{machine}", machineName)
-                .Replace("{template}", templateName);
         }
 
         private static bool ShouldDeployTo(string appName, XElement containerNode)
