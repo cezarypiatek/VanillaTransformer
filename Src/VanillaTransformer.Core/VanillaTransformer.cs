@@ -18,20 +18,30 @@ namespace VanillaTransformer.Core
             _inputParameters = inputParameters;
         }
 
-        public void LaunchTransformations()
+        public TransformationResults LaunchTransformations()
         {
+            var results = new TransformationResults();
             foreach (var transformation in GetTransformations())
             {
-                UpdatePathsWithRootPath(transformation);
-                var configurationPattern = File.ReadAllText(transformation.PatternFilePath);
-                var configurationTransformer = GetTransformer(transformation.PlaceholderPattern);
-                var configurationValues = transformation.ValuesProvider.GetValues();
-                var transformedConfiguration =
-                    configurationTransformer.Transform(configurationPattern, configurationValues);
-                var result = transformation.RunPostTransformations(transformedConfiguration);
-                var outputWriter = GetOutputWriter(transformation);
-                outputWriter.Save(result);
+                try
+                {
+                    UpdatePathsWithRootPath(transformation);
+                    var configurationPattern = File.ReadAllText(transformation.PatternFilePath);
+                    var configurationTransformer = GetTransformer(transformation.PlaceholderPattern);
+                    var configurationValues = transformation.ValuesProvider.GetValues();
+                    var transformedConfiguration = configurationTransformer.Transform(configurationPattern, configurationValues);
+                    var result = transformation.RunPostTransformations(transformedConfiguration);
+                    var outputWriter = GetOutputWriter(transformation);
+                    outputWriter.Save(result);
+                    results.AddSuccess(transformation);;
+                }
+                catch (Exception exception)
+                {
+                    results.AddFail(transformation, exception);
+                }
             }
+
+            return results;
         }
 
         private ITransformedOutputWriter GetOutputWriter(TransformConfiguration configuration)
@@ -123,6 +133,6 @@ namespace VanillaTransformer.Core
 
     public interface IVanillaTransformer
     {
-        void LaunchTransformations();
+        TransformationResults LaunchTransformations();
     }
 }

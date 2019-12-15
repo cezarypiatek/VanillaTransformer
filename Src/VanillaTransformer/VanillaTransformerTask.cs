@@ -57,8 +57,9 @@ namespace VanillaTransformer
                 };
 
                 var vanillaTransformer = new Core.VanillaTransformer(inputParameters);
-                vanillaTransformer.LaunchTransformations();
-                return true;
+                var result = vanillaTransformer.LaunchTransformations();
+                result.PrintDescription(s => Log.LogMessage(s), s => Log.LogError(s));
+                return result.Success;
             }
             catch (Exception e)
             {

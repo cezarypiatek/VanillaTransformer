@@ -14,17 +14,18 @@ namespace VanillaTransformer.Core.PostTransformations
             Pool = new List<IPostTransformation>()
             {
                 new ReFormatXMLTransformation(),
-                new StripXMLCommentsTransformation()
+                new StripXMLCommentsTransformation(),
+                new ReFormatJSONTransformation()
             }.ToDictionary(x => x.Name, x => x);
         }
 
         public static IPostTransformation Get(string transformationName)
         {
-            if (Pool.ContainsKey(transformationName))
+            if (Pool.TryGetValue(transformationName, out var postTransformation))
             {
-                return Pool[transformationName];
+                return postTransformation;
             }
-            throw new ArgumentException("Unknown post transformation");
+            throw new ArgumentException($"Unknown post transformation: {transformationName}");
         }
     }
 }

@@ -6,6 +6,8 @@
     <Description>MsBuildTask to create transformations of text files</Description>
     <Copyright>Copyright 2015</Copyright>
     <Version>1.0.0.0</Version>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <Authors>Cezary Piatek</Authors>
     <PackageId>VanillaTransformer</PackageId>
@@ -35,4 +37,19 @@
     <None Include="$(OutputPath)\*.*" Pack="true" PackagePath="tools/" Visible="false" />
     <None Include="VanillaTransformer.targets" Pack="true" PackagePath="build/" Visible="false" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="tools/**">
+      <Pack>true</Pack>
+      <PackagePath>tools/</PackagePath>
+    </None>
+  </ItemGroup>
+  <Target Name="PrePackage" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_PackageFiles Include="$(OutputPath)\**">
+        <PackagePath>tools\%(RecursiveDir)</PackagePath>
+        <Visible>false</Visible>
+        <BuildAction>Content</BuildAction>
+      </_PackageFiles>
+    </ItemGroup>
+  </Target>
 </Project>
