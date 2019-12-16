@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using VanillaTransformer.Core.Configuration;
 
@@ -20,11 +21,23 @@ namespace VanillaTransformer.Core
         }
         private readonly List<TransformationResult> results = new List<TransformationResult>();
 
-        public void PrintDescription(Action<string> okPrinter, Action<string> errorPrinter)
+        public void PrintDescription(Action<string> okPrinter, Action<string> errorPrinter, string rootPath)
         {
+            string ToRelativePath(string path)
+            {
+                var fullPath = Path.GetFullPath(path);
+                return string.IsNullOrWhiteSpace(rootPath) ? fullPath : fullPath.Replace(rootPath, "");
+            }
+
             foreach (var transformationResult in results)
             {
-                var description = $"{transformationResult.Transformation.PatternFilePath} -> {transformationResult.Transformation.OutputDescription}";
+                var transformation = transformationResult.Transformation;
+
+                var outputDescription = transformation.ShouldOutputToArchive() ? 
+                    $"{ToRelativePath(transformation.OutputArchive)}!{transformation.OutputFilePath}" 
+                    : ToRelativePath(transformation.OutputFilePath);
+
+                var description = $"{ToRelativePath(transformation.PatternFilePath)} -> {outputDescription}";
                 if (transformationResult.Exception == null)
                 {
                     okPrinter($"{description}  [OK]");
