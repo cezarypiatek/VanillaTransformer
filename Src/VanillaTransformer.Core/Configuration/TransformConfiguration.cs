@@ -13,8 +13,6 @@ namespace VanillaTransformer.Core.Configuration
 
         public string PlaceholderPattern { get; set; }
 
-        public string OutputDescription => ShouldOutputToArchive() ? $"{OutputArchive}!{OutputFilePath}" : OutputFilePath;
-
         public IValuesProvider ValuesProvider { get; set; }
         public List<IPostTransformation> PostTransformations { get; set; }
 

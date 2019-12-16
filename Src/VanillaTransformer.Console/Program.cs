@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Fclp;
 using VanillaTransformer.Core;
 
@@ -18,7 +19,7 @@ namespace VanillaTransformer.Console
                 {
                     var vanillaTransformer = new Core.VanillaTransformer(transformerParameters);
                     var results = vanillaTransformer.LaunchTransformations();
-                    results.PrintDescription(System.Console.WriteLine, System.Console.Error.WriteLine);
+                    results.PrintDescription(System.Console.WriteLine, System.Console.Error.WriteLine, Directory.GetCurrentDirectory());
 
                     if (results.Success)
                     {
@@ -28,9 +29,15 @@ namespace VanillaTransformer.Console
                     return -1;
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                System.Console.Error.WriteLine($"ERROR: {e}");
+                var processedException = exception;
+                while (processedException != null)
+                {
+                    System.Console.Error.WriteLine($"ERROR: {processedException.Message}");
+                    processedException = processedException.InnerException;
+                }
+
                 return -1;
             }
             return 0;

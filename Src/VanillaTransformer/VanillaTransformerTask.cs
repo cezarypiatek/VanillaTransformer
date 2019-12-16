@@ -58,7 +58,7 @@ namespace VanillaTransformer
 
                 var vanillaTransformer = new Core.VanillaTransformer(inputParameters);
                 var result = vanillaTransformer.LaunchTransformations();
-                result.PrintDescription(s => Log.LogMessage(s), s => Log.LogError(s));
+                result.PrintDescription(s => Log.LogMessage(s), s => Log.LogError(s), inputParameters.ProjectRootPath);
                 return result.Success;
             }
             catch (Exception e)
