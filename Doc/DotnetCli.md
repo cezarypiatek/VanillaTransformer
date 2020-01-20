@@ -28,7 +28,7 @@ dotnet tool install dotnet-configtransform
 Usage:
 
 ```shell
-dotnet dotnet-configtransform --TransformConfiguration "transformations.xml" --ConfigurationFormat "deployment"
+dotnet-configtransform --TransformConfiguration "transformations.xml" --ConfigurationFormat "deployment"
 ```
 
 ## Parameters
