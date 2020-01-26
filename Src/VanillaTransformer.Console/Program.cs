@@ -12,20 +12,35 @@ namespace VanillaTransformer.Console
         {
             try
             {
-
                 var parser = SetupParser();
                 var transformerParameters = parser.Parse(args);
                 if (transformerParameters != null)
                 {
                     var vanillaTransformer = new Core.VanillaTransformer(transformerParameters);
                     var results = vanillaTransformer.LaunchTransformations();
-                    results.PrintDescription(System.Console.WriteLine, System.Console.Error.WriteLine, Directory.GetCurrentDirectory());
+                    results.PrintDescription(s =>
+                    {
+                        var regularColor = System.Console.ForegroundColor;
+                        System.Console.ForegroundColor = ConsoleColor.Green;
+                        System.Console.Write("\u2713 ");
+                        System.Console.ForegroundColor = regularColor;
+                        System.Console.WriteLine(s);
+                    }, s =>
+                    {
+                        var regularColor = System.Console.ForegroundColor;
+                        System.Console.ForegroundColor = ConsoleColor.Red;
+                        System.Console.Error.Write("\u2717 ");
+                        System.Console.ForegroundColor = regularColor;
+                        System.Console.Error.WriteLine(s);
+                        System.Console.Error.Flush();
+                    }, Directory.GetCurrentDirectory());
 
                     if (results.Success)
                     {
                         return 0;
                     }
 
+                    System.Console.Error.WriteLine("There were some issues during the config transformation. Please examine the log above to get more details.");
                     return -1;
                 }
             }
@@ -110,3 +125,4 @@ namespace VanillaTransformer.Console
         }
     }
 }
+

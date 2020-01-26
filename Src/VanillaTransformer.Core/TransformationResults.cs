@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using VanillaTransformer.Core.Configuration;
 
 namespace VanillaTransformer.Core
@@ -44,13 +45,16 @@ namespace VanillaTransformer.Core
                 }
                 else
                 {
-                    errorPrinter($"{description}  [ERROR]");
+                    var messageBuilder = new StringBuilder();
+                    messageBuilder.AppendLine($"{description}  [ERROR]");
                     var exception = transformationResult.Exception;
                     while (exception != null)
                     {
-                        errorPrinter($"\tCause by: [{exception.GetType().FullName}] {exception.Message}");
+                        messageBuilder.AppendLine($"\tCause by: [{exception.GetType().FullName}] {exception.Message}");
                         exception = exception.InnerException;
                     }
+
+                    errorPrinter(messageBuilder.ToString().Trim());
                 }
             }
         }

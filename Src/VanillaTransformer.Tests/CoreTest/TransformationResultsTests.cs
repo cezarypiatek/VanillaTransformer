@@ -63,8 +63,7 @@ namespace VanillaTransformer.Tests.CoreTest
             transformationResults.PrintDescription(s => { }, s => { results.Add(s); }, @"c:\test1\test2\test4\");
 
             //ASSERT
-            Assert.AreEqual(@"templates\Apps\App1\appsettings.json -> config\Apps\App1\appsettings.json  [ERROR]", results[0]);
-            Assert.AreEqual("\tCause by: [System.Exception] Something went wrong", results[1]);
+            Assert.AreEqual("templates\\Apps\\App1\\appsettings.json -> config\\Apps\\App1\\appsettings.json  [ERROR]\r\n\tCause by: [System.Exception] Something went wrong", results[0]);
         }
     }
 }
