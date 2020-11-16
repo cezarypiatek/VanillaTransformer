@@ -86,7 +86,7 @@ namespace VanillaTransformer.Core.Configuration
 
                                 var machineName = machineNode.GetRequiredAttribute("name");
                                 var machineSpecificValuesProvider = GetValueProvider(machineNode);
-                                var valuesProvider = new CompositeValuesProvider(new[] { machineSpecificValuesProvider, envValuesProvider });
+                                var valuesProvider = new CompositeValuesProvider(new[] {machineSpecificValuesProvider, envValuesProvider});
                                 var (outputFilePath, outputArchivePath) = pathBuilder.CreateOutputPaths(appName, envName, machineName, templateName);
 
                                 yield return new TransformConfiguration()
@@ -98,6 +98,69 @@ namespace VanillaTransformer.Core.Configuration
                                     ValuesProvider = valuesProvider,
                                     PostTransformations = CreatePostTransformations(postTransformations, templateName),
                                 };
+                            }
+                        }
+                    }
+                }
+
+                //Environment specific templates
+                foreach (var environmentNode in environmentsNodes)
+                {
+                    if (environmentNode.GetChildren("apps", "app", isRequired: false) is {} environmentSpecificApps)
+                    {
+                        var envName = environmentNode.GetRequiredAttribute("name");
+                        var envValuesProvider = GetValueProvider(environmentNode);
+                        var machineNodeContainer = environmentNode.Element("machines");
+
+                        foreach (var environmentSpecificApp in environmentSpecificApps)
+                        {
+                            var appName = environmentSpecificApp.GetRequiredAttribute("name");
+
+                            if (environmentSpecificApp.GetChildren("templates", "template", isRequired: false) is {} environmentSpecificTemplates)
+                            {
+                                foreach (var templateNode in environmentSpecificTemplates)
+                                {
+                                    var templateName = templateNode.GetRequiredAttribute("name");
+                                    var patternFilePath = templateNode.GetRequiredAttribute("pattern");
+                                    var placeholder = templateNode.Attribute("placeholder")?.Value;
+
+                                    if (machineNodeContainer == null)
+                                    {
+                                        var (outputFilePath, outputArchivePath) = pathBuilder.CreateOutputPaths(appName, envName, string.Empty, templateName);
+
+                                        yield return new TransformConfiguration
+                                        {
+                                            OutputFilePath = outputFilePath,
+                                            OutputArchive = outputArchivePath,
+                                            PatternFilePath = Path.Combine(rootPath, patternFilePath),
+                                            PlaceholderPattern = placeholder,
+                                            ValuesProvider = envValuesProvider,
+                                            PostTransformations = CreatePostTransformations(postTransformations, templateName),
+                                        };
+                                    }
+                                    else foreach (var machineNode in machineNodeContainer.Elements("machine"))
+                                    {
+                                        if (ShouldDeployTo(appName, machineNode) == false)
+                                        {
+                                            continue;
+                                        }
+
+                                        var machineName = machineNode.GetRequiredAttribute("name");
+                                        var machineSpecificValuesProvider = GetValueProvider(machineNode);
+                                        var valuesProvider = new CompositeValuesProvider(new[] { machineSpecificValuesProvider, envValuesProvider });
+                                        var (outputFilePath, outputArchivePath) = pathBuilder.CreateOutputPaths(appName, envName, machineName, templateName);
+
+                                        yield return new TransformConfiguration
+                                        {
+                                            OutputFilePath = outputFilePath,
+                                            OutputArchive = outputArchivePath,
+                                            PatternFilePath = Path.Combine(rootPath, patternFilePath),
+                                            PlaceholderPattern = placeholder,
+                                            ValuesProvider = valuesProvider,
+                                            PostTransformations = CreatePostTransformations(postTransformations, templateName),
+                                        };
+                                    }
+                                }
                             }
                         }
                     }
