@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.2;net472</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;netcoreapp2.2;net472</TargetFrameworks>
     <AssemblyTitle>VanillaTransformer.Console</AssemblyTitle>
     <Product>VanillaTransformer.Console</Product>
     <Copyright>Copyright ©  2018</Copyright>
